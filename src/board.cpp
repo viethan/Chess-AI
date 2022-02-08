@@ -14,6 +14,9 @@ const int SCREEN_HEIGHT = 640;
 
 enum Pieces { wPawn = 1, wKnight, wBishop, wRook, wQueen, wKing, bPawn, bKnight, bBishop, bRook, bQueen, bKing };
 
+const int BORDER_OFFSET = 18;
+const int BOARD_OFFSET = 75;
+
 //Starts up SDL and creates window
 bool init();
 //Loads media
@@ -163,16 +166,26 @@ void close()
 	SDL_Quit();
 }
 
-void visualise() {
-	if ( SDL_BlitSurface(board, NULL, gScreenSurface, NULL) == -1 ) {
-        	cout<<"Couldnt do board blitting " << endl;
-    	}
+bool visualise() {
+	if (SDL_BlitSurface(board, NULL, gScreenSurface, NULL) == -1) {
+        cout << "Error while blitting the board" << endl;
+        return 0;
+    }
 
-    	if (SDL_BlitSurface(Piece_Surfaces[1] ,NULL,gScreenSurface,NULL) == -1 ){
-        	cout<<"could not do clear image blitting "<< endl;
-    	}
+    SDL_Rect dstrect;
 
-    	SDL_UpdateWindowSurface( gWindow );
+    dstrect.x = BORDER_OFFSET + BOARD_OFFSET * 6;
+	dstrect.y = BORDER_OFFSET + BOARD_OFFSET * 2;
+	dstrect.w = NULL;
+	dstrect.h = NULL;
+
+    if (SDL_BlitSurface(Piece_Surfaces[7], NULL, gScreenSurface, &dstrect) == -1 ){
+        cout << "Error while blitting piece 1" << endl;
+        return 0;
+    }
+
+    SDL_UpdateWindowSurface(gWindow);
+    return 1;
 }
 
 int main(int argc,char *argv[]){
@@ -196,7 +209,10 @@ int main(int argc,char *argv[]){
     		if (e.type == SDL_QUIT) quit = true;
     	}
 
-    	visualise();
+    	if (!visualise()) {
+    		cout << "Failed to visualise" << endl;
+    		return -1;
+    	}
     }    
 
     close();
