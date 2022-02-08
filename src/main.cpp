@@ -1,12 +1,14 @@
 #include <iostream>
+#include "forall.h"
 #include "visualise.h"
+#include "moves.h"
 using namespace std;
 
 bool gColour;
 
 //g++ board.cpp -w -lSDL2 -lSDL2_image -o board
 int main(int argc,char *argv[]){
-    gColour = 1;
+    gColour = 0;
 
 
     if (!init_SDL()) {
@@ -34,6 +36,7 @@ int main(int argc,char *argv[]){
     	}
     }    
 
-    close();
+    close_visualise();
+    close_moves();
     return 0;
 }
