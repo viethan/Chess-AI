@@ -180,14 +180,16 @@ bool visualise() {
 
     SDL_Rect dstrect;
 
-    dstrect.x = BORDER_OFFSET + BOARD_OFFSET * 6;
-	dstrect.y = BORDER_OFFSET + BOARD_OFFSET * 2;
-	dstrect.w = NULL;
-	dstrect.h = NULL;
+    for (int row = 0; row < 8; row++) {
+    	for (int column = 0; column < 8; column++) {
+    		dstrect.x = BORDER_OFFSET + BOARD_OFFSET * column;
+			dstrect.y = BORDER_OFFSET + BOARD_OFFSET * row;
 
-    if (SDL_BlitSurface(Piece_Surfaces[7], NULL, gScreenSurface, &dstrect) == -1 ){
-        cout << "Error while blitting piece 1" << endl;
-        return 0;
+    		if (SDL_BlitSurface(Piece_Surfaces[BOARD[row][column]], NULL, gScreenSurface, &dstrect) == -1 ){
+        		cout << "Error while blitting piece" << endl;
+        		return 0;
+    		}		
+    	}
     }
 
     SDL_UpdateWindowSurface(gWindow);
@@ -248,36 +250,3 @@ int main(int argc,char *argv[]){
     close();
     return 0;
 }
-
-
-
-
-// //Loads individual image
-// SDL_Surface* loadSurface( std::string path );
-
-// SDL_Surface* loadSurface( std::string path )
-// {
-// 	//The final optimized image
-// 	SDL_Surface* optimizedSurface = NULL;
-
-// 	//Load image at specified path
-// 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-// 	if( loadedSurface == NULL )
-// 	{
-// 		printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
-// 	}
-// 	else
-// 	{
-// 		//Convert surface to screen format
-// 		optimizedSurface = SDL_ConvertSurface( loadedSurface, gScreenSurface->format, 0 );
-// 		if( optimizedSurface == NULL )
-// 		{
-// 			printf( "Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
-// 		}
-
-// 		//Get rid of old loaded surface
-// 		SDL_FreeSurface( loadedSurface );
-// 	}
-
-// 	return optimizedSurface;
-// }
