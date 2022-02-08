@@ -16,6 +16,7 @@ enum Pieces { wPawn = 1, wKnight, wBishop, wRook, wQueen, wKing, bPawn, bKnight,
 
 const int BORDER_OFFSET = 18;
 const int BOARD_OFFSET = 75;
+int** BOARD = NULL;
 
 //Starts up SDL and creates window
 bool init();
@@ -31,7 +32,7 @@ SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* board = NULL;
 SDL_Surface** Piece_Surfaces = NULL;
 
-bool init()
+bool init_SDL()
 {
 	if(SDL_Init( SDL_INIT_VIDEO ) < 0) {
 		cout << "SDL could not initialize" << endl;
@@ -158,6 +159,11 @@ void close()
 	delete Piece_Surfaces;
 	Piece_Surfaces = NULL;
 
+	for (int i = 0; i < 8; i++) {
+		delete BOARD[i];
+	}
+	delete BOARD;
+
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 
@@ -188,11 +194,34 @@ bool visualise() {
     return 1;
 }
 
+void init_board() {
+	BOARD = new int*[8];
+
+	for (int i = 0; i < 8; i++) {
+		switch (i) {
+			case 0:
+				BOARD[i] = new int[8]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
+				break;
+			case 1:
+				BOARD[i] = new int[8]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
+				break;
+			case 6:
+				BOARD[i] = new int[8]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
+				break;
+			case 7:
+				BOARD[i] = new int[8]{wRook, wKnight, wBishop, wQueen, wKing, wBishop, wKnight, wRook};
+				break;
+			default:
+				BOARD[i] = new int[8]{0, 0, 0, 0, 0, 0, 0, 0}; 	 	
+		}		
+	}
+}
+
 int main(int argc,char *argv[]){
     
 
-    if (!init()) {
-    	cout << "Failed to initialize" << endl;
+    if (!init_SDL()) {
+    	cout << "Failed to initialize SDL" << endl;
     	return -1;
     }
 
@@ -201,6 +230,7 @@ int main(int argc,char *argv[]){
     	return -1;
     }
 
+    init_board();
     bool quit = false;
     SDL_Event e;
 
