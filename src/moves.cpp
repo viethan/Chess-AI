@@ -31,3 +31,37 @@ void close_moves() {
 	}
 	delete gBoardCoords;
 }
+
+int** copy_board(int **board) {
+	int** copy = new int*[8];
+	for (int i = 0; i < 8; i++) {
+		copy[i] = new int[8];
+	}
+
+	for (int row = 0; row < 8; row++) {
+		for (int column = 0; column < 8; column++) {
+			copy[row][column] = board[row][column];
+		}
+	}
+
+	return copy;
+}
+
+
+int** make_move(int srcRow, int srcCol, int destRow, int destCol, int** board) {
+	srcRow = 7 - srcRow;
+	destRow = 7 - destRow;
+
+	int **newBoard = copy_board(board);
+	newBoard[destRow][destCol] = newBoard[srcRow][srcCol]; 
+	newBoard[srcRow][srcCol] = 0;
+
+	return newBoard;
+}
+
+void free_board(int** board) {
+	for (int i = 0; i < 8; i++) {
+		delete board[i];
+	}
+	delete board;
+}
