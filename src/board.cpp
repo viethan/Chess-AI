@@ -182,13 +182,17 @@ bool visualise() {
 
     for (int row = 0; row < 8; row++) {
     	for (int column = 0; column < 8; column++) {
-    		dstrect.x = BORDER_OFFSET + BOARD_OFFSET * column;
-			dstrect.y = BORDER_OFFSET + BOARD_OFFSET * row;
-
-    		if (SDL_BlitSurface(Piece_Surfaces[BOARD[row][column]], NULL, gScreenSurface, &dstrect) == -1 ){
-        		cout << "Error while blitting piece" << endl;
-        		return 0;
-    		}		
+			if (BOARD[row][column] != 0) {
+				dstrect.x = BORDER_OFFSET + BOARD_OFFSET * column;
+				dstrect.y = BORDER_OFFSET + BOARD_OFFSET * row;
+				dstrect.w = 75;
+				dstrect.h = 75;
+    			
+    			if (SDL_BlitSurface(Piece_Surfaces[BOARD[row][column]], NULL, gScreenSurface, &dstrect) == -1 ){
+        			cout << "Error while blitting piece" << endl;
+        			return 0;
+    			}		
+    		}
     	}
     }
 
@@ -219,9 +223,8 @@ void init_board() {
 	}
 }
 
+//g++ board.cpp -w -lSDL2 -lSDL2_image -o board
 int main(int argc,char *argv[]){
-    
-
     if (!init_SDL()) {
     	cout << "Failed to initialize SDL" << endl;
     	return -1;
