@@ -43,6 +43,15 @@ std::vector<Move> queenMove(int** board, int row, int column, bool colour);
 std::vector<Move> kingMove(int** board, int row, int column, bool colour);
 
 bool checked(int **board, bool colour); // we can use this to see if we're checking our opponent, and if we accidentally got checked
+bool checked_knights(int** board, int kingRow, int kingColumn, bool colour);
+
+
+
+
+
+
+
+
 int stalemate_win(int **board, bool colour); // 0 = nothing, 1 = win, 2 = lose, 3 = stalemate; probably enum
 int eval(int **board);
 

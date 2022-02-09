@@ -117,7 +117,7 @@ std::vector<Move> get_moves(int **board, bool colour) {
 					case wKing:
 					case bKing:
 						piece_moves = kingMove(board, row, column, colour);
-						cout << "king at row " << 7 - row << ", col " << column << endl;
+						cout << "BEFORE king at row " << 7 - row << ", col " << column << endl;
 				}
 
 				moves.insert(moves.end(), piece_moves.begin(), piece_moves.end());
@@ -485,12 +485,16 @@ std::vector<Move> kingMove(int** board, int row, int column, bool colour) {
 	// left
 	if (column-1 >= 0 && !checked(temp_copy = make_move(Move{row, column, row, column-1}, board), colour)) {
 			moves.push_back(Move{row, column, row, column-1});
+	} else {
+		cout << "Nope left" << endl;
 	}
 	free_board(temp_copy);
 
 	// right
 	if (column+1 < BOARD_WIDTH && !checked(temp_copy = make_move(Move{row, column, row, column+1}, board), colour)) {
 			moves.push_back(Move{row, column, row, column+1});
+	} else {
+		cout << "Nope right" << endl;
 	}
 	free_board(temp_copy);
 
@@ -511,11 +515,18 @@ bool checked(int **board, bool colour) {
 		}
 	}
 
-	return false;
-
 	// check the knights
 
+	if (checked_knights(board, kingRow, kingColumn, colour)) {
+		return true;
+	}
+
 	// check the pawns-diagonals?
+
+
+	return false;
+
+	
 
 	// check upper-left diagonal
 
@@ -532,4 +543,91 @@ bool checked(int **board, bool colour) {
 	// check left rank
 
 	// check right rank
+}
+
+bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
+	int antiColourLower, antiColourUpper;
+	if (colour == BLACK) {
+		antiColourLower = 1;
+		antiColourUpper = 6;
+	} else {
+		antiColourLower = 7;
+		antiColourUpper = 12;
+	}
+
+	int ro, col;
+
+	// upper-left1
+	ro = kingRow - 2;
+	col = kingColumn - 1;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
+		(board[ro][col] == bKnight || board[ro][col] == wKnight)) {  // must be a knight
+			return true;
+	}
+
+	// upper-left2
+	ro = kingRow - 1;
+	col = kingColumn - 2;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the oppposite team
+		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+			return true;
+	}
+
+	// upper-right1
+	ro = kingRow - 2;
+	col = kingColumn + 1;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
+		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+			return true;
+	}
+
+	// upper-right2
+	ro = kingRow - 1;
+	col = kingColumn + 2;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
+		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+			return true;
+	}
+
+	// bottom-left1
+	ro = kingRow + 2;
+	col = kingColumn - 1;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
+		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+			return true;
+	}
+
+	// bottom-left2
+	ro = kingRow + 1;
+	col = kingColumn - 2;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
+		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+			return true;
+	}
+
+	// bottom-right1
+	ro = kingRow + 2;
+	col = kingColumn + 1;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
+		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+			return true;
+	}
+
+	// bottom-right2
+	ro = kingRow + 1;
+	col = kingColumn + 2;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
+		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+			return true;
+	}
+
+	return false;
 }
