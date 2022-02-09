@@ -30,7 +30,7 @@ int main(int argc,char *argv[]){
     free_board(gBoardCoords);
     gBoardCoords = temp;
     
-    temp = make_move(Move{7-7, 2, 7-3, 4}, gBoardCoords);
+    temp = make_move(Move{7-7, 1, 7-3, 4}, gBoardCoords);
     free_board(gBoardCoords);
     gBoardCoords = temp;
 

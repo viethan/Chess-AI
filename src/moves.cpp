@@ -87,6 +87,7 @@ std::vector<Move> get_moves(int **board, bool colour) {
 	for (int row = 0; row < BOARD_HEIGHT; row++) {
 		for (int column = 0; column < BOARD_WIDTH; column++) {
 			if (colourLower <= board[row][column] && board[row][column] <= colourUpper) {
+				piece_moves.clear();
 				switch (board[row][column]) {
 					case wPawn:
 					case bPawn:
@@ -100,7 +101,7 @@ std::vector<Move> get_moves(int **board, bool colour) {
 						break;
 					case wBishop:
 					case bBishop:
-						piece_moves = bishopMove(board, row, column, colour);
+						//piece_moves = bishopMove(board, row, column, colour); COMMENTED FOR NOW
 						cout << "bishop at row " << 7 - row << ", col " << column << endl;
 						break;
 					case wRook:
@@ -120,6 +121,7 @@ std::vector<Move> get_moves(int **board, bool colour) {
 				}
 
 				moves.insert(moves.end(), piece_moves.begin(), piece_moves.end());
+
 			}
 		}
 	}
@@ -142,7 +144,85 @@ std::vector<Move> pawnMove(int** board, int row, int column, bool colour) {
 }
 
 std::vector<Move> knightMove(int** board, int row, int column, bool colour) {
-	return std::vector<Move>();
+	std::vector<Move> moves = std::vector<Move>();
+
+	int colourLower, colourUpper;
+	if (colour == WHITE) {
+		colourLower = 1;
+		colourUpper = 6;
+	} else {
+		colourLower = 7;
+		colourUpper = 12;
+	}
+
+	// Can physically do the move, and it's not in our team
+	int ro, col;
+
+	// upper-left1
+	ro = row - 2;
+	col = column - 1;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+			moves.push_back(Move{row, column, ro, col});
+	}
+
+	// upper-left2
+	ro = row - 1;
+	col = column - 2;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+			moves.push_back(Move{row, column, ro, col});
+	}
+
+	// upper-right1
+	ro = row - 2;
+	col = column + 1;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+			moves.push_back(Move{row, column, ro, col});
+	}
+
+	// upper-right2
+	ro = row - 1;
+	col = column + 2;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+			moves.push_back(Move{row, column, ro, col});
+	}
+
+	// bottom-left1
+	ro = row + 2;
+	col = column - 1;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+			moves.push_back(Move{row, column, ro, col});
+	}
+
+	// bottom-left2
+	ro = row + 1;
+	col = column - 2;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+			moves.push_back(Move{row, column, ro, col});
+	}
+
+	// bottom-right1
+	ro = row + 2;
+	col = column + 1;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+			moves.push_back(Move{row, column, ro, col});
+	}
+
+	// bottom-right2
+	ro = row + 1;
+	col = column + 2;
+	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
+		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+			moves.push_back(Move{row, column, ro, col});
+	}
+
+	return moves;
 }
 
 std::vector<Move> bishopMove(int** board, int row, int column, bool colour) {
