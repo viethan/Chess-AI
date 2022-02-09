@@ -2,7 +2,7 @@
 #ifndef FORALL_H
 #define FORALL_H
 
-enum Pieces { wPawn = 1, wKnight, wBishop, wRook, wQueen, wKing, bPawn, bKnight, bBishop, bRook, bQueen, bKing };
+enum Pieces { EMPTY, wPawn, wKnight, wBishop, wRook, wQueen, wKing, bPawn, bKnight, bBishop, bRook, bQueen, bKing };
 enum Colour { WHITE = 0, BLACK = 1 };
 const int BOARD_HEIGHT = 8;
 const int BOARD_WIDTH = 8;

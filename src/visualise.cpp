@@ -157,7 +157,7 @@ bool visualise() {
     if (gColour == WHITE) {
         for (int row = 0; row < BOARD_HEIGHT; row++) {
         	for (int column = 0; column < BOARD_WIDTH; column++) {
-    			if (gBoardCoords[row][column] != 0) {
+    			if (gBoardCoords[row][column] != EMPTY) {
     				dstrect.x = BORDER_OFFSET + BOARD_OFFSET * column;
     				dstrect.y = BORDER_OFFSET + BOARD_OFFSET * row;
     				dstrect.w = 75;
@@ -173,7 +173,7 @@ bool visualise() {
     } else {
     	for (int row = 7; row >= 0; row--) {
         	for (int column = 7; column >= 0; column--) {
-    			if (gBoardCoords[row][column] != 0) {
+    			if (gBoardCoords[row][column] != EMPTY) {
     				dstrect.x = BORDER_OFFSET + BOARD_OFFSET * (7 - column);
     				dstrect.y = BORDER_OFFSET + BOARD_OFFSET * (7 - row);
     				dstrect.w = 75;
