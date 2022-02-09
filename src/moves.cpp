@@ -91,7 +91,7 @@ std::vector<Move> get_moves(int **board, bool colour) {
 				switch (board[row][column]) {
 					case wPawn:
 					case bPawn:
-						piece_moves = pawnMove(board, row, column, colour);
+						//piece_moves = pawnMove(board, row, column, colour); COMMENTED FOR NOW
 						cout << "pawn at row " << 7 - row << ", col " << column << endl;
 						break;
 					case wKnight:
@@ -441,5 +441,95 @@ std::vector<Move> queenMove(int** board, int row, int column, bool colour) {
 }
 
 std::vector<Move> kingMove(int** board, int row, int column, bool colour) {
-	return std::vector<Move>();
+	std::vector<Move> moves = std::vector<Move>();
+	int** temp_copy;
+
+	if (row+1 < BOARD_HEIGHT) {
+		// bottom
+		if (!checked(temp_copy = make_move(Move{row, column, row+1, column}, board), colour)) {
+			moves.push_back(Move{row, column, row+1, column});
+		}
+		free_board(temp_copy);
+
+		// bottom-left
+		if (column-1 >= 0 && !checked(temp_copy = make_move(Move{row, column, row+1, column-1}, board), colour)) {
+			moves.push_back(Move{row, column, row+1, column-1});
+		}
+		free_board(temp_copy);
+		// bottom-right
+		if (column+1 < BOARD_WIDTH && !checked(temp_copy = make_move(Move{row, column, row+1, column+1}, board), colour)) {
+			moves.push_back(Move{row, column, row+1, column+1});
+		}
+		free_board(temp_copy);
+	}
+
+	if (row-1 >= 0) {
+		// upper
+		if (!checked(temp_copy = make_move(Move{row, column, row-1, column}, board), colour)) {
+			moves.push_back(Move{row, column, row-1, column});
+		}
+		free_board(temp_copy);
+
+		// upper-left
+		if (column-1 >= 0 && !checked(temp_copy = make_move(Move{row, column, row-1, column-1}, board), colour)) {
+			moves.push_back(Move{row, column, row-1, column-1});
+		}
+		free_board(temp_copy);
+		// upper-right
+		if (column+1 < BOARD_WIDTH && !checked(temp_copy = make_move(Move{row, column, row-1, column+1}, board), colour)) {
+			moves.push_back(Move{row, column, row-1, column+1});
+		}
+		free_board(temp_copy);
+	}
+
+	// left
+	if (column-1 >= 0 && !checked(temp_copy = make_move(Move{row, column, row, column-1}, board), colour)) {
+			moves.push_back(Move{row, column, row, column-1});
+	}
+	free_board(temp_copy);
+
+	// right
+	if (column+1 < BOARD_WIDTH && !checked(temp_copy = make_move(Move{row, column, row, column+1}, board), colour)) {
+			moves.push_back(Move{row, column, row, column+1});
+	}
+	free_board(temp_copy);
+
+	return moves;
+}
+
+bool checked(int **board, bool colour) {
+	// Find the king in the specified colour
+	int kingRow, kingColumn;
+
+	for (int row = 0; row < BOARD_HEIGHT; row++) {
+		for (int column = 0; column < BOARD_WIDTH; column++) {
+			if ((colour == WHITE && board[row][column] == wKing) ||
+				(colour == BLACK && board[row][column] == bKing)) {
+				kingRow = row;
+				kingColumn = column;
+			}
+		}
+	}
+
+	return false;
+
+	// check the knights
+
+	// check the pawns-diagonals?
+
+	// check upper-left diagonal
+
+	// check upper-right diagonal
+
+	// check bottom-left diagonal
+
+	// check bottom-right diagonal
+
+	// check top file
+
+	// check bottom file
+
+	// check left rank
+
+	// check right rank
 }
