@@ -7,7 +7,7 @@ using namespace std;
 bool gColour;
 
 int main(int argc,char *argv[]){
-    gColour = 0;
+    gColour = 1;
 
 
     if (!init_SDL()) {
@@ -30,6 +30,9 @@ int main(int argc,char *argv[]){
     temp = make_move(Move{7, 6, 3, 4}, gBoardCoords);
     free_board(gBoardCoords);
     gBoardCoords = temp;
+
+    std::vector<Move> no;
+    no = get_moves(gBoardCoords, gColour);
 
 
     bool quit = false;

@@ -68,7 +68,7 @@ void free_board(int** board) {
 	delete board;
 }
 
-Move* get_moves(int **board, bool colour) {
+std::vector<Move> get_moves(int **board, bool colour) {
 	if (colour == WHITE && wChecked) {
 		return escape_check(board, colour);
 	}
@@ -77,11 +77,83 @@ Move* get_moves(int **board, bool colour) {
 		return escape_check(board, colour);
 	}
 
-	//for (int i = )
+	int colourLower, colourUpper;
+	if (colour == WHITE) {
+		colourLower = 1;
+		colourUpper = 6;
+	} else {
+		colourLower = 7;
+		colourUpper = 12;
+	}
 
+	std::vector<Move> moves, piece_moves;
+	for (int row = 0; row < BOARD_HEIGHT; row++) {
+		for (int column = 0; column < BOARD_WIDTH; column++) {
+			if (colourLower <= board[row][column] && board[row][column] <= colourUpper) {
+				switch (board[row][column]) {
+					case wPawn:
+					case bPawn:
+						piece_moves = pawnMove(board, row, column, colour);
+						//cout << "pawn at row " << 7 - row << ", col " << column << endl;
+						break;
+					case wKnight:
+					case bKnight:
+						piece_moves = knightMove(board, row, column, colour);
+						//cout << "knight at row " << 7 - row << ", col " << column << endl;
+						break;
+					case wBishop:
+					case bBishop:
+						piece_moves = BishopMove(board, row, column, colour);
+						//cout << "bishop at row " << 7 - row << ", col " << column << endl;
+						break;
+					case wRook:
+					case bRook:
+						piece_moves = RookMove(board, row, column, colour);
+						//cout << "rook at row " << 7 - row << ", col " << column << endl;
+						break;
+					case wQueen:
+					case bQueen:
+						piece_moves = QueenMove(board, row, column, colour);
+						//cout << "queen at row " << 7 - row << ", col " << column << endl;
+						break;
+					case wKing:
+					case bKing:
+						piece_moves = KingMove(board, row, column, colour);
+						//cout << "king at row " << 7 - row << ", col " << column << endl;
+				}
 
+				moves.insert(moves.end(), piece_moves.begin(), piece_moves.end());
+			}
+		}
+	}
+
+	return moves;
 }
 
-Move* escape_check(int **board, bool colour) {
-	return NULL;
+std::vector<Move> escape_check(int **board, bool colour) {
+	return std::vector<Move>();
+}
+
+std::vector<Move> pawnMove(int** board, int row, int column, bool colour) {
+	return std::vector<Move>();
+}
+
+std::vector<Move> knightMove(int** board, int row, int column, bool colour) {
+	return std::vector<Move>();
+}
+
+std::vector<Move> BishopMove(int** board, int row, int column, bool colour) {
+	return std::vector<Move>();
+}
+
+std::vector<Move> RookMove(int** board, int row, int column, bool colour) {
+	return std::vector<Move>();
+}
+
+std::vector<Move> QueenMove(int** board, int row, int column, bool colour) {
+	return std::vector<Move>();
+}
+
+std::vector<Move> KingMove(int** board, int row, int column, bool colour) {
+	return std::vector<Move>();
 }
