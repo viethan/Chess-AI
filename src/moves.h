@@ -10,7 +10,7 @@ using namespace std;
 extern int** gBoardCoords;
 static bool wChecked, bChecked;
 
-// THE MOVES ARE NORMAL POINT OF VIEW, not SDL
+// THE MOVES ARE FROM SDL POINT OF VIEW
 struct Move {
 	int srcRow, srcCol;
 	int destRow, destCol;
@@ -37,10 +37,10 @@ std::vector<Move> escape_check(int **board, bool colour); // direct attack and p
 
 std::vector<Move> pawnMove(int** board, int row, int column, bool colour);
 std::vector<Move> knightMove(int** board, int row, int column, bool colour);
-std::vector<Move> BishopMove(int** board, int row, int column, bool colour);
-std::vector<Move> RookMove(int** board, int row, int column, bool colour);
-std::vector<Move> QueenMove(int** board, int row, int column, bool colour);
-std::vector<Move> KingMove(int** board, int row, int column, bool colour);
+std::vector<Move> bishopMove(int** board, int row, int column, bool colour);
+std::vector<Move> rookMove(int** board, int row, int column, bool colour);
+std::vector<Move> queenMove(int** board, int row, int column, bool colour);
+std::vector<Move> kingMove(int** board, int row, int column, bool colour);
 
 bool checked(int **board, bool colour); // we can use this to see if we're checking our opponent, and if we accidentally got checked
 int stalemate_win(int **board, bool colour); // 0 = nothing, 1 = win, 2 = lose, 3 = stalemate; probably enum

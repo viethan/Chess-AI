@@ -144,7 +144,7 @@ void close_visualise()
 
 	//Quit SDL subsystems
 	IMG_Quit();
-	SDL_Quit();
+	SDL_Quit(); // gives memory leak?
 }
 
 bool visualise() {
