@@ -515,35 +515,22 @@ bool checked(int **board, bool colour) {
 		}
 	}
 
-	// check the knights
-	if (checked_knights(board, kingRow, kingColumn, colour)) {
+	if (checked_knights(board, kingRow, kingColumn, colour) ||
+		checked_pawns(board, kingRow, kingColumn, colour) ||
+		checked_diagonals(board, kingRow, kingColumn, colour) ||
+		checked_rankFile(board, kingRow, kingColumn, colour)) {
 		return true;
 	}
-
-	// check the pawns-diagonals?
-	if (checked_pawns(board, kingRow, kingColumn, colour)) {
-		return true;
-	}
-
-	return false;
-
 	
+	return false;
+}
 
-	// check upper-left diagonal
+bool checked_diagonals(int** board, int kingRow, int kingColumn, bool colour) {
+	return false;
+}
 
-	// check upper-right diagonal
-
-	// check bottom-left diagonal
-
-	// check bottom-right diagonal
-
-	// check top file
-
-	// check bottom file
-
-	// check left rank
-
-	// check right rank
+bool checked_rankFile(int** board, int kingRow, int kingColumn, bool colour) {
+	return false;
 }
 
 bool checked_pawns(int** board, int kingRow, int kingColumn, bool colour) {
