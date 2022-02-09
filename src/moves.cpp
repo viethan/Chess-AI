@@ -105,12 +105,12 @@ std::vector<Move> get_moves(int **board, bool colour) {
 						break;
 					case wRook:
 					case bRook:
-						piece_moves = rookMove(board, row, column, colour);
+						//piece_moves = rookMove(board, row, column, colour); COMMENTED FOR NOW
 						cout << "rook at row " << 7 - row << ", col " << column << endl;
 						break;
 					case wQueen:
 					case bQueen:
-						piece_moves = queenMove(board, row, column, colour);
+						//piece_moves = queenMove(board, row, column, colour); COMMENTED FOR NOW
 						cout << "queen at row " << 7 - row << ", col " << column << endl;
 						break;
 					case wKing:
@@ -127,7 +127,7 @@ std::vector<Move> get_moves(int **board, bool colour) {
 	cout << "Hello?????" << endl;
 	cout << moves.size() << endl;
 	for (int i = 0; i < moves.size(); ++i) {
-        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << "destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
+        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
     }
 
 	return moves;
@@ -146,7 +146,90 @@ std::vector<Move> knightMove(int** board, int row, int column, bool colour) {
 }
 
 std::vector<Move> bishopMove(int** board, int row, int column, bool colour) {
-	return std::vector<Move>();
+	std::vector<Move> moves = std::vector<Move>();
+
+	int colourLower, colourUpper;
+	if (colour == WHITE) {
+		colourLower = 1;
+		colourUpper = 6;
+	} else {
+		colourLower = 7;
+		colourUpper = 12;
+	}
+
+	int ro, col;
+
+	// top-right diagonal
+	ro = row - 1;
+	col = column + 1;
+
+	while (ro >= 0 && col < BOARD_WIDTH) {
+		if (board[ro][col] == 0) { // empty square
+			moves.push_back(Move{row, column, ro, col});
+		} else if (colourLower <= board[ro][col] && board[ro][col] <= colourUpper) { // same colour
+			break;
+		} else { // first enemy encountered on the path
+			moves.push_back(Move{row, column, ro, col});
+			break;
+		}
+
+		ro--; col++;
+	}
+
+	// bottom-left diagonal
+	ro = row + 1;
+	col = column - 1;
+
+	while (ro < BOARD_HEIGHT && col >= 0) {
+		if (board[ro][col] == 0) { // empty square
+			moves.push_back(Move{row, column, ro, col});
+		} else if (colourLower <= board[ro][col] && board[ro][col] <= colourUpper) { // same colour
+			break;
+		} else { // first enemy encountered on the path
+			moves.push_back(Move{row, column, ro, col});
+			break;
+		}
+		
+		ro++; col--;
+	}
+
+
+	// top-left diagonal
+	ro = row - 1;
+	col = column - 1;
+
+	while (ro >= 0 && col >= 0) {
+		if (board[ro][col] == 0) { // empty square
+			moves.push_back(Move{row, column, ro, col});
+		} else if (colourLower <= board[ro][col] && board[ro][col] <= colourUpper) { // same colour
+			break;
+		} else { // first enemy encountered on the path
+			moves.push_back(Move{row, column, ro, col});
+			break;
+		}
+		
+		ro--; col--;
+	}
+
+
+	// bottom-right diagonal
+	ro = row + 1;
+	col = column + 1;
+
+	while (ro < BOARD_HEIGHT && col < BOARD_WIDTH) {
+		if (board[ro][col] == 0) { // empty square
+			moves.push_back(Move{row, column, ro, col});
+		} else if (colourLower <= board[ro][col] && board[ro][col] <= colourUpper) { // same colour
+			break;
+		} else { // first enemy encountered on the path
+			moves.push_back(Move{row, column, ro, col});
+			break;
+		}
+		
+		ro++; col++;
+	}
+
+	return moves;
 }
 
 std::vector<Move> rookMove(int** board, int row, int column, bool colour) {
