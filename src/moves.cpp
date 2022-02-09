@@ -516,13 +516,14 @@ bool checked(int **board, bool colour) {
 	}
 
 	// check the knights
-
 	if (checked_knights(board, kingRow, kingColumn, colour)) {
 		return true;
 	}
 
 	// check the pawns-diagonals?
-
+	if (checked_pawns(board, kingRow, kingColumn, colour)) {
+		return true;
+	}
 
 	return false;
 
@@ -543,6 +544,30 @@ bool checked(int **board, bool colour) {
 	// check left rank
 
 	// check right rank
+}
+
+bool checked_pawns(int** board, int kingRow, int kingColumn, bool colour) {
+	if (colour == WHITE) {
+		if (kingRow-1 >= 0) {
+			if (kingColumn-1 >= 0 && board[kingRow-1][kingColumn-1] == bPawn) {
+				return true;
+			}
+			if (kingColumn+1 < BOARD_WIDTH && board[kingRow-1][kingColumn+1] == bPawn) {
+				return true;
+			}
+		}
+	} else {
+		if (kingRow+1 < BOARD_HEIGHT) {
+			if (kingColumn-1 >= 0 && board[kingRow+1][kingColumn-1] == wPawn) {
+				return true;
+			}
+			if (kingColumn+1 < BOARD_WIDTH && board[kingRow+1][kingColumn+1] == wPawn) {
+				return true;
+			}	
+		}
+	}
+
+	return false;
 }
 
 bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {

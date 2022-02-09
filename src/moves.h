@@ -44,7 +44,7 @@ std::vector<Move> kingMove(int** board, int row, int column, bool colour);
 
 bool checked(int **board, bool colour); // we can use this to see if we're checking our opponent, and if we accidentally got checked
 bool checked_knights(int** board, int kingRow, int kingColumn, bool colour);
-
+bool checked_pawns(int** board, int kingRow, int kingColumn, bool colour);
 
 
 
