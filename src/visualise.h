@@ -14,6 +14,8 @@ const int SCREEN_HEIGHT = 640;
 const int BORDER_OFFSET = 18;
 const int BOARD_OFFSET = 75;
 
+extern bool gColour;
+
 //The window we'll be rendering to
 extern SDL_Window* gWindow;
 //The surface contained by the window

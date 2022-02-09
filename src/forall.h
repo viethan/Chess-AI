@@ -3,7 +3,9 @@
 #define FORALL_H
 
 enum Pieces { wPawn = 1, wKnight, wBishop, wRook, wQueen, wKing, bPawn, bKnight, bBishop, bRook, bQueen, bKing };
-extern bool gColour; // 0 for white, 1 for black
+enum Colour { WHITE = 0, BLACK = 1 };
+const int BOARD_HEIGHT = 8;
+const int BOARD_WIDTH = 8;
 extern int** gBoardCoords;
 
 #endif

@@ -23,11 +23,11 @@ int main(int argc,char *argv[]){
     init_board();
     
     int** temp;
-    temp = make_move(1, 4, 3, 4, gBoardCoords);
+    temp = make_move(Move{1, 4, 3, 4}, gBoardCoords);
     free_board(gBoardCoords);
     gBoardCoords = temp;
     
-    temp = make_move(7, 6, 3, 4, gBoardCoords);
+    temp = make_move(Move{7, 6, 3, 4}, gBoardCoords);
     free_board(gBoardCoords);
     gBoardCoords = temp;
 

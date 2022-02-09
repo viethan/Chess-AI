@@ -37,7 +37,7 @@ bool init_SDL()
 
 bool loadMedia()
 {
-	if (!gColour) {
+	if (gColour == WHITE) {
 		gBoardSurface = IMG_Load("../img/wBoard.png");
 	} else {
 		gBoardSurface = IMG_Load("../img/bBoard.png");
@@ -154,9 +154,9 @@ bool visualise() {
     }
 
     SDL_Rect dstrect;
-    if (!gColour) { // white
-        for (int row = 0; row < 8; row++) {
-        	for (int column = 0; column < 8; column++) {
+    if (gColour == WHITE) {
+        for (int row = 0; row < BOARD_HEIGHT; row++) {
+        	for (int column = 0; column < BOARD_WIDTH; column++) {
     			if (gBoardCoords[row][column] != 0) {
     				dstrect.x = BORDER_OFFSET + BOARD_OFFSET * column;
     				dstrect.y = BORDER_OFFSET + BOARD_OFFSET * row;
