@@ -515,6 +515,8 @@ bool checked(int **board, bool colour) {
 		}
 	}
 
+	// CHECK OTHER KING
+
 	if (checked_knights(board, kingRow, kingColumn, colour) ||
 		checked_pawns(board, kingRow, kingColumn, colour) ||
 		checked_diagonals(board, kingRow, kingColumn, colour) ||
@@ -530,6 +532,46 @@ bool checked_diagonals(int** board, int kingRow, int kingColumn, bool colour) {
 }
 
 bool checked_rankFile(int** board, int kingRow, int kingColumn, bool colour) {
+	// right
+	for (int col = kingColumn+1; col < BOARD_WIDTH; col++) {
+		if ((colour == WHITE && (board[kingRow][col] == bRook || board[kingRow][col] == bQueen)) ||
+			(colour == BLACK && (board[kingRow][col] == wRook || board[kingRow][col] == wQueen))) { 
+			return true;
+		} else if (board[kingRow][col] != EMPTY) { // stop looking after encountering a piece
+			break;
+		}
+	}
+
+	// left
+	for (int col = kingColumn-1; col >= 0; col--) {
+		if ((colour == WHITE && (board[kingRow][col] == bRook || board[kingRow][col] == bQueen)) ||
+			(colour == BLACK && (board[kingRow][col] == wRook || board[kingRow][col] == wQueen))) { 
+			return true;
+		} else if (board[kingRow][col] != EMPTY) {
+			break;
+		}
+	}		
+
+	// bottom of rook
+	for (int ro = kingRow+1; ro < BOARD_HEIGHT; ro++) {
+		if ((colour == WHITE && (board[ro][kingColumn] == bRook || board[ro][kingColumn] == bQueen)) ||
+			(colour == BLACK && (board[ro][kingColumn] == wRook || board[ro][kingColumn] == wQueen))) { 
+			return true;
+		} else if (board[ro][kingColumn] != EMPTY) {
+			break;
+		}
+	}
+
+	// top of rook
+	for (int ro = kingRow-1; ro >= 0; ro--) {
+		if ((colour == WHITE && (board[ro][kingColumn] == bRook || board[ro][kingColumn] == bQueen)) ||
+			(colour == BLACK && (board[ro][kingColumn] == wRook || board[ro][kingColumn] == wQueen))) { 
+			return true;
+		} else if (board[ro][kingColumn] != EMPTY) {
+			break;
+		}
+	}
+
 	return false;
 }
 
