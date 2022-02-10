@@ -528,6 +528,68 @@ bool checked(int **board, bool colour) {
 }
 
 bool checked_diagonals(int** board, int kingRow, int kingColumn, bool colour) {
+	int ro, col;
+
+	// top-right diagonal
+	ro = kingRow - 1;
+	col = kingColumn + 1;
+
+	while (ro >= 0 && col < BOARD_WIDTH) {
+		if ((colour == WHITE && (board[ro][col] == bBishop || board[ro][col] == bQueen)) ||
+			(colour == BLACK && (board[ro][col] == wBishop || board[ro][col] == wQueen))) { 
+			return true;
+		} else if (board[ro][col] != EMPTY) { // stop looking after encountering a piece
+			break;
+		}
+
+		ro--; col++;
+	}
+
+	// bottom-left diagonal
+	ro = kingRow + 1;
+	col = kingColumn - 1;
+
+	while (ro < BOARD_HEIGHT && col >= 0) {
+		if ((colour == WHITE && (board[ro][col] == bBishop || board[ro][col] == bQueen)) ||
+			(colour == BLACK && (board[ro][col] == wBishop || board[ro][col] == wQueen))) { 
+			return true;
+		} else if (board[ro][col] != EMPTY) { // stop looking after encountering a piece
+			break;
+		}
+		
+		ro++; col--;
+	}
+
+	// top-left diagonal
+	ro = kingRow - 1;
+	col = kingColumn - 1;
+
+	while (ro >= 0 && col >= 0) {
+		if ((colour == WHITE && (board[ro][col] == bBishop || board[ro][col] == bQueen)) ||
+			(colour == BLACK && (board[ro][col] == wBishop || board[ro][col] == wQueen))) { 
+			return true;
+		} else if (board[ro][col] != EMPTY) { // stop looking after encountering a piece
+			break;
+		}
+		
+		ro--; col--;
+	}
+
+	// bottom-right diagonal
+	ro = kingRow + 1;
+	col = kingColumn + 1;
+
+	while (ro < BOARD_HEIGHT && col < BOARD_WIDTH) {
+		if ((colour == WHITE && (board[ro][col] == bBishop || board[ro][col] == bQueen)) ||
+			(colour == BLACK && (board[ro][col] == wBishop || board[ro][col] == wQueen))) { 
+			return true;
+		} else if (board[ro][col] != EMPTY) { // stop looking after encountering a piece
+			break;
+		}
+		
+		ro++; col++;
+	}
+
 	return false;
 }
 

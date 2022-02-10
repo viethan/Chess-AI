@@ -34,6 +34,10 @@ int main(int argc,char *argv[]){
     free_board(gBoardCoords);
     gBoardCoords = temp;
 
+    temp = make_move(Move{7-0, 5, 7-4, 2}, gBoardCoords);
+    free_board(gBoardCoords);
+    gBoardCoords = temp;
+
     std::vector<Move> no;
     no = get_moves(gBoardCoords, 1);
 
