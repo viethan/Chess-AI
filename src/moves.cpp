@@ -515,15 +515,69 @@ bool checked(int **board, bool colour) {
 		}
 	}
 
-	// CHECK OTHER KING
-
 	if (checked_knights(board, kingRow, kingColumn, colour) ||
 		checked_pawns(board, kingRow, kingColumn, colour) ||
+		checked_enemyKing(board, kingRow, kingColumn, colour) ||
 		checked_diagonals(board, kingRow, kingColumn, colour) ||
 		checked_rankFile(board, kingRow, kingColumn, colour)) {
 		return true;
 	}
 	
+	return false;
+}
+
+bool checked_enemyKing(int** board, int kingRow, int kingColumn, bool colour) {
+	if (kingRow+1 < BOARD_HEIGHT) {
+		// bottom
+		if ((colour == WHITE && board[kingRow+1][kingColumn] == bKing) ||
+			(colour == BLACK && board[kingRow+1][kingColumn] == wKing)) {
+			return true;
+		}
+		// bottom-left
+		if ((colour == WHITE && board[kingRow+1][kingColumn-1] == bKing) ||
+			(colour == BLACK && board[kingRow+1][kingColumn-1] == wKing)) {
+			return true;
+		}
+		// bottom-right
+		if ((colour == WHITE && board[kingRow+1][kingColumn+1] == bKing) ||
+			(colour == BLACK && board[kingRow+1][kingColumn+1] == wKing)) {
+			return true;
+		}
+	}
+
+	if (kingRow-1 >= 0) {
+		// upper
+		if ((colour == WHITE && board[kingRow-1][kingColumn] == bKing) ||
+			(colour == BLACK && board[kingRow-1][kingColumn] == wKing)) {
+			return true;
+		}
+		// upper-left
+		if ((colour == WHITE && board[kingRow-1][kingColumn-1] == bKing) ||
+			(colour == BLACK && board[kingRow-1][kingColumn-1] == wKing)) {
+			return true;
+		}
+		// upper-right
+		if ((colour == WHITE && board[kingRow-1][kingColumn+1] == bKing) ||
+			(colour == BLACK && board[kingRow-1][kingColumn+1] == wKing)) {
+			return true;
+		}
+	}
+
+
+	// left
+	if (kingColumn-1 >= 0 && 
+		((colour == WHITE && board[kingRow][kingColumn-1] == bKing) ||
+			(colour == BLACK && board[kingRow][kingColumn-1] == wKing))) {
+			return true;
+	} 
+
+	// right
+	if (kingColumn+1 < BOARD_WIDTH && 
+		((colour == WHITE && board[kingRow][kingColumn+1] == bKing) ||
+			(colour == BLACK && board[kingRow][kingColumn+1] == wKing))) {
+			return true;
+	}
+
 	return false;
 }
 
