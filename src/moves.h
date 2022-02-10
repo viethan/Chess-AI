@@ -33,7 +33,6 @@ void free_board(int** board);
 
 
 std::vector<Move> get_moves(int **board, bool colour);
-std::vector<Move> escape_check(int **board, bool colour); // direct attack and potential attack (maybe mark the squares?)
 
 std::vector<Move> pawnMove(int** board, int row, int column, bool colour);
 std::vector<Move> knightMove(int** board, int row, int column, bool colour);

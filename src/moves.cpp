@@ -66,14 +66,6 @@ void free_board(int** board) {
 }
 
 std::vector<Move> get_moves(int **board, bool colour) {
-	if (colour == WHITE && wChecked) {
-		return escape_check(board, colour);
-	}
-
-	if (colour == BLACK && bChecked) {
-		return escape_check(board, colour);
-	}
-
 	int colourLower, colourUpper;
 	if (colour == WHITE) {
 		colourLower = 1;
@@ -91,33 +83,27 @@ std::vector<Move> get_moves(int **board, bool colour) {
 				switch (board[row][column]) {
 					case wPawn:
 					case bPawn:
-						//piece_moves = pawnMove(board, row, column, colour); COMMENTED FOR NOW
-						cout << "pawn at row " << 7 - row << ", col " << column << endl;
+						piece_moves = pawnMove(board, row, column, colour); 
 						break;
 					case wKnight:
 					case bKnight:
-						//piece_moves = knightMove(board, row, column, colour); COMMENTED FOR NOW
-						cout << "knight at row " << 7 - row << ", col " << column << endl;
+						piece_moves = knightMove(board, row, column, colour);
 						break;
 					case wBishop:
 					case bBishop:
-						//piece_moves = bishopMove(board, row, column, colour); COMMENTED FOR NOW
-						cout << "bishop at row " << 7 - row << ", col " << column << endl;
+						piece_moves = bishopMove(board, row, column, colour);
 						break;
 					case wRook:
 					case bRook:
-						//piece_moves = rookMove(board, row, column, colour); COMMENTED FOR NOW
-						cout << "rook at row " << 7 - row << ", col " << column << endl;
+						piece_moves = rookMove(board, row, column, colour);
 						break;
 					case wQueen:
 					case bQueen:
-						//piece_moves = queenMove(board, row, column, colour); COMMENTED FOR NOW
-						cout << "queen at row " << 7 - row << ", col " << column << endl;
+						piece_moves = queenMove(board, row, column, colour);
 						break;
 					case wKing:
 					case bKing:
 						piece_moves = kingMove(board, row, column, colour);
-						cout << "BEFORE king at row " << 7 - row << ", col " << column << endl;
 				}
 
 				moves.insert(moves.end(), piece_moves.begin(), piece_moves.end());
@@ -126,17 +112,23 @@ std::vector<Move> get_moves(int **board, bool colour) {
 		}
 	}
 
-	cout << "Hello?????" << endl;
+	int **temp_copy;
+	for (vector<Move>::iterator it = moves.begin(); it != moves.end();) {
+		if (checked(temp_copy = make_move(Move{it->srcRow, it->srcCol, it->destRow, it->destCol}, board), colour)) {
+			moves.erase(it);
+		} else {
+			it++;
+		}
+
+		free_board(temp_copy);
+    }
+
 	cout << moves.size() << endl;
 	for (int i = 0; i < moves.size(); ++i) {
         cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
     }
 
 	return moves;
-}
-
-std::vector<Move> escape_check(int **board, bool colour) {
-	return std::vector<Move>();
 }
 
 std::vector<Move> pawnMove(int** board, int row, int column, bool colour) {
@@ -442,61 +434,54 @@ std::vector<Move> queenMove(int** board, int row, int column, bool colour) {
 
 std::vector<Move> kingMove(int** board, int row, int column, bool colour) {
 	std::vector<Move> moves = std::vector<Move>();
-	int** temp_copy;
+	int colourLower, colourUpper;
+	
+	if (colour == WHITE) {
+		colourLower = 1;
+		colourUpper = 6;
+	} else {
+		colourLower = 7;
+		colourUpper = 12;
+	}
 
 	if (row+1 < BOARD_HEIGHT) {
 		// bottom
-		if (!checked(temp_copy = make_move(Move{row, column, row+1, column}, board), colour)) {
+		if (!(colourLower <= board[row+1][column] && board[row+1][column] <= colourUpper)) {
 			moves.push_back(Move{row, column, row+1, column});
 		}
-		free_board(temp_copy);
-
 		// bottom-left
-		if (column-1 >= 0 && !checked(temp_copy = make_move(Move{row, column, row+1, column-1}, board), colour)) {
+		if (!(colourLower <= board[row+1][column-1] && board[row+1][column-1] <= colourUpper)) {
 			moves.push_back(Move{row, column, row+1, column-1});
 		}
-		free_board(temp_copy);
 		// bottom-right
-		if (column+1 < BOARD_WIDTH && !checked(temp_copy = make_move(Move{row, column, row+1, column+1}, board), colour)) {
+		if (!(colourLower <= board[row+1][column+1] && board[row+1][column+1] <= colourUpper)) {
 			moves.push_back(Move{row, column, row+1, column+1});
 		}
-		free_board(temp_copy);
 	}
 
 	if (row-1 >= 0) {
 		// upper
-		if (!checked(temp_copy = make_move(Move{row, column, row-1, column}, board), colour)) {
+		if (!(colourLower <= board[row-1][column] && board[row-1][column] <= colourUpper)) {
 			moves.push_back(Move{row, column, row-1, column});
 		}
-		free_board(temp_copy);
-
 		// upper-left
-		if (column-1 >= 0 && !checked(temp_copy = make_move(Move{row, column, row-1, column-1}, board), colour)) {
+		if (!(colourLower <= board[row-1][column-1] && board[row-1][column-1] <= colourUpper)) {
 			moves.push_back(Move{row, column, row-1, column-1});
 		}
-		free_board(temp_copy);
 		// upper-right
-		if (column+1 < BOARD_WIDTH && !checked(temp_copy = make_move(Move{row, column, row-1, column+1}, board), colour)) {
+		if (!(colourLower <= board[row-1][column+1] && board[row-1][column+1] <= colourUpper)) {
 			moves.push_back(Move{row, column, row-1, column+1});
 		}
-		free_board(temp_copy);
 	}
 
 	// left
-	if (column-1 >= 0 && !checked(temp_copy = make_move(Move{row, column, row, column-1}, board), colour)) {
+	if (column-1 >= 0 && (!(colourLower <= board[row][column-1] && board[row][column-1] <= colourUpper))) {
 			moves.push_back(Move{row, column, row, column-1});
-	} else {
-		cout << "Nope left" << endl;
 	}
-	free_board(temp_copy);
-
 	// right
-	if (column+1 < BOARD_WIDTH && !checked(temp_copy = make_move(Move{row, column, row, column+1}, board), colour)) {
+	if (column+1 < BOARD_WIDTH && (!(colourLower <= board[row][column+1] && board[row][column+1] <= colourUpper))) {
 			moves.push_back(Move{row, column, row, column+1});
-	} else {
-		cout << "Nope right" << endl;
 	}
-	free_board(temp_copy);
 
 	return moves;
 }
