@@ -558,13 +558,11 @@ bool checked_pawns(int** board, int kingRow, int kingColumn, bool colour) {
 }
 
 bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
-	int antiColourLower, antiColourUpper;
-	if (colour == BLACK) {
-		antiColourLower = 1;
-		antiColourUpper = 6;
+	int opponent_knight;
+	if (colour == WHITE) {
+		opponent_knight = bKnight; 
 	} else {
-		antiColourLower = 7;
-		antiColourUpper = 12;
+		opponent_knight = wKnight;
 	}
 
 	int ro, col;
@@ -573,8 +571,7 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 	ro = kingRow - 2;
 	col = kingColumn - 1;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
-		(board[ro][col] == bKnight || board[ro][col] == wKnight)) {  // must be a knight
+		board[ro][col] == opponent_knight) { 
 			return true;
 	}
 
@@ -582,8 +579,7 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 	ro = kingRow - 1;
 	col = kingColumn - 2;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the oppposite team
-		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+		board[ro][col] == opponent_knight) {
 			return true;
 	}
 
@@ -591,8 +587,7 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 	ro = kingRow - 2;
 	col = kingColumn + 1;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
-		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+		board[ro][col] == opponent_knight) {
 			return true;
 	}
 
@@ -600,8 +595,7 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 	ro = kingRow - 1;
 	col = kingColumn + 2;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
-		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+		board[ro][col] == opponent_knight) {
 			return true;
 	}
 
@@ -609,8 +603,7 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 	ro = kingRow + 2;
 	col = kingColumn - 1;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
-		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+		board[ro][col] == opponent_knight) {
 			return true;
 	}
 
@@ -618,8 +611,7 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 	ro = kingRow + 1;
 	col = kingColumn - 2;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
-		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+		board[ro][col] == opponent_knight) {
 			return true;
 	}
 
@@ -627,8 +619,7 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 	ro = kingRow + 2;
 	col = kingColumn + 1;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
-		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+		board[ro][col] == opponent_knight) { // must be a knight
 			return true;
 	}
 
@@ -636,8 +627,7 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 	ro = kingRow + 1;
 	col = kingColumn + 2;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		(antiColourLower <= board[ro][col] && board[ro][col] <= antiColourUpper) && // must be on the opposite team
-		(board[ro][col] == bKnight || board[ro][col] == wKnight)) { // must be a knight
+		board[ro][col] == opponent_knight) { // must be a knight
 			return true;
 	}
 
