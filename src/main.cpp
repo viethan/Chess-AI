@@ -12,7 +12,6 @@ bool shutEvents = false;
 static int PollEvents(void *ptr)
 {
     SDL_Event e;
-    // a bittt bad because no sync read/write
     while (shutEvents == false) { 
         while (SDL_PollEvent(&e)) {}
     }
@@ -36,18 +35,52 @@ int selectPlayer() {
     }
 
     if (n == 2) {
-        std::srand(static_cast<unsigned int>(std::time(nullptr))); 
-        return std::rand() % 2;
+        srand(static_cast<unsigned int>(time(nullptr))); 
+        return rand() % 2;
     }
 
     return n;
 }
 
+void userMoves() {
+    string input;
+    Move userMove;
+    bool validInput = false;
+    while (!validInput) {
+        cin >> input;
+
+        if (input.compare("quit") == 0) { 
+            shutEvents = true;
+            return;
+        }
+
+        if (string2move(input, &userMove) && 
+            check_move(userMove, gBoardCoords, gColour)) 
+            validInput = true; 
+        else cout << "bad input" << endl;
+    }
+
+    int** temp;
+    temp = make_move(userMove, gBoardCoords);
+    free_board(gBoardCoords);
+    gBoardCoords = temp;
+}
+
+void AIMoves() {
+    // Let the AI choose its move
+    // Perform AI's chosen move
+}
+
 int main(int argc,char *argv[]){
-   gColour = selectPlayer();
-    cout << "You are ";
-    if (gColour) cout << "black" << endl;
-    else cout << "white" << endl;
+    bool playerMoves;
+    gColour = selectPlayer();
+    if (gColour == WHITE) {
+        cout << "You are white" << endl;
+        playerMoves = true;
+    } else { 
+        cout << "You are black" << endl;
+        playerMoves = false;
+    }
 
     if (!init_SDL()) {
     	cout << "Failed to initialize SDL" << endl;
@@ -58,50 +91,29 @@ int main(int argc,char *argv[]){
     	cout << "Failed to load media" << endl;
     	return -1;
     }
-    
+
     SDL_Thread *thread;
     int         threadReturnValue;
     thread = SDL_CreateThread(PollEvents, "Events", (void *)NULL);
+    
     init_board();
-    while (true) {
-        SDL_Thread *thread;
-        int         threadReturnValue;
-
-    	if (!visualise()) {
+    while (!shutEvents) {
+        if (!visualise()) {
     		cout << "Failed to visualise" << endl;
     		return -1;
     	}
 
-        string input;
-        Move userMove;
-        bool validInput = false;
-        while (!validInput) {
-            cin >> input;
-
-            if (input.compare("quit") == 0) { break; }
-            if (string2move(input, &userMove) && check_move(userMove, gBoardCoords, gColour)) { 
-                cout << "Good move" << endl; 
-                validInput = true; } 
-            else {
-                cout << "bad input" << endl;
-            }
+        if (playerMoves) {
+            userMoves();
+            playerMoves = false;
+        } else {
+            AIMoves();
+            playerMoves = true;
         }
-
-        if (input.compare("quit") == 0) { break; }
-
-        int** temp;
-        temp = make_move(userMove, gBoardCoords);
-        free_board(gBoardCoords);
-        gBoardCoords = temp;
-
-        // Let the AI choose its move
-
-        // Perform AI's chosen move
     }
 
     shutEvents = true;
     SDL_WaitThread(thread, &threadReturnValue);
-
 
     close_visualise();
     close_moves();
