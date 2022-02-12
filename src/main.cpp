@@ -7,6 +7,7 @@
 using namespace std;
 
 bool QUIT = false;
+vector<string> history;
 
 static int PollEvents(void *ptr)
 {
@@ -46,6 +47,7 @@ int** userMoves(int** board, bool colour) {
     Move userMove;
     bool validInput = false;
     while (!validInput) {
+        cout << "Your next move: " << endl;
         cin >> input;
 
         if (input.compare("quit") == 0) { 
@@ -60,6 +62,13 @@ int** userMoves(int** board, bool colour) {
         else cout << "bad input" << endl;
     }
 
+    if (colour == WHITE) {
+        history.push_back("White " + input);    
+    } else {
+        history.push_back("Black " + input);
+    }
+    
+
     int** temp;
     temp = make_move(userMove, board);
     free_board(board);
@@ -67,7 +76,15 @@ int** userMoves(int** board, bool colour) {
 }
 
 int** AIMoves(int** board, bool colour) {
-    Move AIMove = getOptimalMove(board, !colour);
+    Move AIMove = getOptimalMove(board, colour);
+    string srcCol(1, 'a' + AIMove.srcCol), destCol(1, 'a' + AIMove.destCol);
+    string srcRow(1, '1' + (7-AIMove.srcRow)), destRow(1, '1' + (7-AIMove.destRow));
+    
+    if (colour == WHITE) {
+        history.push_back("White " + srcCol + srcRow + destCol + destRow);    
+    } else {
+        history.push_back("Black " + srcCol + srcRow + destCol + destRow);
+    }
 
     int** temp;
     temp = make_move(AIMove, board);
@@ -106,6 +123,7 @@ int main(int argc,char *argv[]){
         playerMoves = false;
     }
 
+    history = vector<string>();
     int** board = init_main(colour);
     if (board == NULL) return -1;
 
@@ -119,8 +137,13 @@ int main(int argc,char *argv[]){
             board = userMoves(board, colour);
             playerMoves = false;
         } else {
-            board = AIMoves(board, colour);
+            board = AIMoves(board, !colour);
             playerMoves = true;
+        }
+
+        cout << "\033[2J\033[1;1H";
+        for (vector<string>::iterator it = history.begin(); it != history.end(); it++) {
+            cout << *it << endl;
         }
     }
 

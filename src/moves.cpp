@@ -1,8 +1,6 @@
 #include "moves.h"
 
 int** init_board() {
-	wChecked = false;
-	bChecked = false;
 	int** board = new int*[BOARD_HEIGHT];
 
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
