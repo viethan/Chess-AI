@@ -34,9 +34,9 @@ bool init_SDL()
 	return 1;
 }
 
-bool loadMedia()
+bool loadMedia(bool colour)
 {
-	if (gColour == WHITE) {
+	if (colour == WHITE) {
 		gBoardSurface = IMG_Load("../img/wBoard.png");
 	} else {
 		gBoardSurface = IMG_Load("../img/bBoard.png");
@@ -143,14 +143,14 @@ void close_visualise()
 	//SDL_Quit(); // gives memory leak?
 }
 
-bool visualise(int **board) {
+bool visualise(int **board, bool colour) {
 	if (SDL_BlitSurface(gBoardSurface, NULL, gScreenSurface, NULL) == -1) {
         cout << "Error while blitting the board" << endl;
         return 0;
     }
 
     SDL_Rect dstrect;
-    if (gColour == WHITE) {
+    if (colour == WHITE) {
         for (int row = 0; row < BOARD_HEIGHT; row++) {
         	for (int column = 0; column < BOARD_WIDTH; column++) {
     			if (board[row][column] != EMPTY) {

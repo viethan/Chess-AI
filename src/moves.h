@@ -7,8 +7,6 @@
 #include "forall.h"
 using namespace std;
 
-static bool wChecked, bChecked; // still using these?
-
 // THE MOVES ARE FROM SDL POINT OF VIEW
 struct Move {
 	int srcRow, srcCol;
@@ -47,8 +45,6 @@ bool checked_rankFile(int** board, int kingRow, int kingColumn, bool colour);
 bool string2move(string input, Move* target);
 bool check_move(Move tryMove, int** board, bool colour);
 
-
-
-int stalemate_win(int **board, bool colour); // 0 = nothing, 1 = win, 2 = lose, 3 = stalemate; probably enum
+//int stalemate_win(int **board, bool colour); // 0 = nothing, 1 = win, 2 = lose, 3 = stalemate; probably enum
 
 #endif

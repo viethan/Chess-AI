@@ -14,8 +14,6 @@ const int SCREEN_HEIGHT = 640;
 const int BORDER_OFFSET = 18;
 const int BOARD_OFFSET = 75;
 
-extern bool gColour;
-
 //The window we'll be rendering to
 extern SDL_Window* gWindow;
 //The surface contained by the window
@@ -26,10 +24,10 @@ extern SDL_Surface** gPieceSurfaces;
 // Starts up SDL and creates window
 bool init_SDL();
 // Loads board and chess images
-bool loadMedia();
+bool loadMedia(bool colour);
 // Frees media and shuts down SDL
 void close_visualise();
 // Make the current board appear in the window
-bool visualise(int **board);
+bool visualise(int **board, bool colour);
 
 #endif

@@ -6,7 +6,6 @@
 #include "visualise.h"
 using namespace std;
 
-bool gColour;
 bool QUIT = false;
 
 static int PollEvents(void *ptr)
@@ -42,7 +41,7 @@ int selectPlayer() {
     return n;
 }
 
-int** userMoves(int** board) {
+int** userMoves(int** board, bool colour) {
     string input;
     Move userMove;
     bool validInput = false;
@@ -56,7 +55,7 @@ int** userMoves(int** board) {
         }
 
         if (string2move(input, &userMove) && 
-            check_move(userMove, board, gColour)) 
+            check_move(userMove, board, colour)) 
             validInput = true; 
         else cout << "bad input" << endl;
     }
@@ -67,8 +66,8 @@ int** userMoves(int** board) {
     return temp;
 }
 
-int** AIMoves(int** board) {
-    Move AIMove = getOptimalMove(board, !gColour);
+int** AIMoves(int** board, bool colour) {
+    Move AIMove = getOptimalMove(board, !colour);
 
     int** temp;
     temp = make_move(AIMove, board);
@@ -77,13 +76,13 @@ int** AIMoves(int** board) {
     return temp;
 }
 
-int** init_main() { 
+int** init_main(bool colour) { 
     if (!init_SDL()) {
         cout << "Failed to initialize SDL" << endl;
         return NULL;
     }
 
-    if (!loadMedia()) {
+    if (!loadMedia(colour)) {
         cout << "Failed to load media" << endl;
         return NULL;
     }
@@ -98,8 +97,8 @@ int main(int argc,char *argv[]){
     thread = SDL_CreateThread(PollEvents, "Events", (void *)NULL);
 
     bool playerMoves;
-    gColour = selectPlayer();
-    if (gColour == WHITE) {
+    bool colour = selectPlayer();
+    if (colour == WHITE) {
         cout << "You are white" << endl;
         playerMoves = true;
     } else { 
@@ -107,20 +106,20 @@ int main(int argc,char *argv[]){
         playerMoves = false;
     }
 
-    int** board = init_main();
+    int** board = init_main(colour);
     if (board == NULL) return -1;
-    
+
     while (!QUIT) {
-        if (!visualise(board)) {
+        if (!visualise(board, colour)) {
     		cout << "Failed to visualise" << endl;
     		return -1;
     	}
 
         if (playerMoves) {
-            board = userMoves(board);
+            board = userMoves(board, colour);
             playerMoves = false;
         } else {
-            board = AIMoves(board);
+            board = AIMoves(board, colour);
             playerMoves = true;
         }
     }
