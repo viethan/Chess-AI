@@ -782,12 +782,33 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 
 bool string2move(string input, Move* target) {
 	if (input.size() == 4 && 
-		( ('a' <= input[0] && input[0] <= 'h') || ('A' <= input[0] && input[0] <= 'H') ) &&
-		( '1' <= input[1] && input[1] <= '8' ) && 
-		( ('a' <= input[2] && input[2] <= 'h') || ('A' <= input[2] && input[2] <= 'H') ) &&
-		( '1' <= input[3] && input[3] <= '8' ) ) {
-			return 1;
+		('a' <= input[0] && input[0] <= 'h') &&
+		('1' <= input[1] && input[1] <= '8') && 
+		('a' <= input[2] && input[2] <= 'h') &&
+		('1' <= input[3] && input[3] <= '8')) {
+			
+			target->srcCol = input[0] - 'a';
+			target->srcRow = 7 - (input[1] - '1'); 
+			target->destCol = input[2] - 'a';
+			target->destRow = 7 - (input[3] - '1');
+			return true;
 	}
 
-	return 0;
+	return false;
+}
+
+bool check_move(Move tryMove, int** board, bool colour) {
+	std::vector<Move> availableMoves;
+    availableMoves = get_moves(board, colour);
+
+	for (vector<Move>::iterator it = availableMoves.begin(); it != availableMoves.end(); it++) {
+		if (it->srcRow == tryMove.srcRow &&
+			it->srcCol == tryMove.srcCol &&
+			it->destRow == tryMove.destRow &&
+			it->destCol == tryMove.destCol){
+					return true;
+				}
+    }
+
+    return false;
 }
