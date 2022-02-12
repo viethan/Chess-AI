@@ -1,14 +1,13 @@
 // moves.h
-#ifndef moves_H
-#define moves_H
+#ifndef MOVES_H
+#define MOVES_H
 
 #include <iostream>
 #include <vector>
 #include "forall.h"
 using namespace std;
 
-extern int** gBoardCoords;
-static bool wChecked, bChecked;
+static bool wChecked, bChecked; // still using these?
 
 // THE MOVES ARE FROM SDL POINT OF VIEW
 struct Move {
@@ -54,6 +53,5 @@ bool check_move(Move tryMove, int** board, bool colour);
 
 
 int stalemate_win(int **board, bool colour); // 0 = nothing, 1 = win, 2 = lose, 3 = stalemate; probably enum
-int eval(int **board);
 
 #endif
