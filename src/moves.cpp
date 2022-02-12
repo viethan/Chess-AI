@@ -126,10 +126,10 @@ std::vector<Move> get_moves(int **board, bool colour) {
 		free_board(temp_copy);
     }
 
-	cout << moves.size() << endl;
-	for (int i = 0; i < moves.size(); ++i) {
-        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
-    }
+	// cout << moves.size() << endl;
+	// for (int i = 0; i < moves.size(); ++i) {
+ //        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
+ //    }
 
 	return moves;
 }

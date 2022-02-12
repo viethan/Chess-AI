@@ -1,18 +1,19 @@
 #include <iostream>
 #include <cstdlib> 
 #include <ctime> 
-#include "forall.h"
-#include "visualise.h"
 #include "moves.h"
+#include "forall.h"
+#include "minimax.h"
+#include "visualise.h"
 using namespace std;
 
 bool gColour;
-bool shutEvents = false;
+bool QUIT = false;
 
 static int PollEvents(void *ptr)
 {
     SDL_Event e;
-    while (shutEvents == false) { 
+    while (QUIT == false) { 
         while (SDL_PollEvent(&e)) {}
     }
 
@@ -50,7 +51,7 @@ void userMoves() {
         cin >> input;
 
         if (input.compare("quit") == 0) { 
-            shutEvents = true;
+            QUIT = true;
             return;
         }
 
@@ -67,11 +68,36 @@ void userMoves() {
 }
 
 void AIMoves() {
-    // Let the AI choose its move
-    // Perform AI's chosen move
+    Move AIMove = getOptimalMove(gBoardCoords, !gColour);
+
+    int** temp;
+    temp = make_move(AIMove, gBoardCoords);
+    free_board(gBoardCoords);
+    gBoardCoords = temp;
+    SDL_Delay(3000);
+}
+
+int init_main() {
+    if (!init_SDL()) {
+        cout << "Failed to initialize SDL" << endl;
+        return -1;
+    }
+
+    if (!loadMedia()) {
+        cout << "Failed to load media" << endl;
+        return -1;
+    }
+
+    init_board();
+    return 0;
 }
 
 int main(int argc,char *argv[]){
+    // These will prevent our game window to be deemed unresponsive
+    SDL_Thread *thread;
+    int         threadReturnValue;
+    thread = SDL_CreateThread(PollEvents, "Events", (void *)NULL);
+
     bool playerMoves;
     gColour = selectPlayer();
     if (gColour == WHITE) {
@@ -82,22 +108,8 @@ int main(int argc,char *argv[]){
         playerMoves = false;
     }
 
-    if (!init_SDL()) {
-    	cout << "Failed to initialize SDL" << endl;
-    	return -1;
-    }
-
-    if (!loadMedia()) {
-    	cout << "Failed to load media" << endl;
-    	return -1;
-    }
-
-    SDL_Thread *thread;
-    int         threadReturnValue;
-    thread = SDL_CreateThread(PollEvents, "Events", (void *)NULL);
-    
-    init_board();
-    while (!shutEvents) {
+    if (init_main() != 0) return -1;
+    while (!QUIT) {
         if (!visualise()) {
     		cout << "Failed to visualise" << endl;
     		return -1;
@@ -112,9 +124,7 @@ int main(int argc,char *argv[]){
         }
     }
 
-    shutEvents = true;
     SDL_WaitThread(thread, &threadReturnValue);
-
     close_visualise();
     close_moves();
     return 0;

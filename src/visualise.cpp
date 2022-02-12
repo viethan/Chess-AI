@@ -2,7 +2,6 @@
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
-//The surface contained by the window
 SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* gBoardSurface = NULL;
 SDL_Surface** gPieceSurfaces = NULL;
@@ -138,11 +137,8 @@ void close_visualise()
 
 	delete gPieceSurfaces;
 	gPieceSurfaces = NULL;
-
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
-
-	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit(); // gives memory leak?
 }
