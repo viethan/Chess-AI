@@ -112,6 +112,9 @@ std::vector<Move> get_moves(int **board, bool colour) {
 		}
 	}
 
+	// We have to make sure that our king is not accidentally checked
+	// self-inflicting discovered attack
+	// also helps if the king was checked to begin with
 	int **temp_copy;
 	for (vector<Move>::iterator it = moves.begin(); it != moves.end();) {
 		if (checked(temp_copy = make_move(Move{it->srcRow, it->srcCol, it->destRow, it->destCol}, board), colour)) {

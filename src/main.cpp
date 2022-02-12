@@ -3,8 +3,18 @@
 #include "visualise.h"
 #include "moves.h"
 using namespace std;
-
 bool gColour;
+
+// MUST FIND A WAY TO SHUT DOWN THIS THREAD CLEANLY
+static int PollEvents(void *ptr)
+{
+    SDL_Event e;
+    while (true) {
+        while (SDL_PollEvent(&e)) {}
+    }
+
+    return 1;
+}
 
 int main(int argc,char *argv[]){
     gColour = 0;
@@ -41,18 +51,33 @@ int main(int argc,char *argv[]){
     std::vector<Move> no;
     no = get_moves(gBoardCoords, 1);
 
-    bool quit = false;
-    SDL_Event e;
+    SDL_CreateThread(PollEvents, "TestThread", (void *)NULL);
 
+    bool quit = false;
     while (!quit) {
-    	while (SDL_PollEvent(&e)) {
-    		if (e.type == SDL_QUIT) quit = true;
-    	}
+        SDL_Thread *thread;
+        int         threadReturnValue;
 
     	if (!visualise()) {
     		cout << "Failed to visualise" << endl;
     		return -1;
     	}
+
+        string input;
+        cin >> input;
+        cout << "Input string: " << input << endl;
+
+        // Quit
+        if (input.compare("quit") == 0) {
+            quit = true;
+        }
+
+        // Check if valid move; if valid, perform move
+        // else, input another move
+
+        // Let the AI choose its move
+
+        // Perform AI's chosen move
     }    
 
     close_visualise();
