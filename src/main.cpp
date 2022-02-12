@@ -110,7 +110,7 @@ int main(int argc,char *argv[]){
 
     if (init_main() != 0) return -1;
     while (!QUIT) {
-        if (!visualise()) {
+        if (!visualise(gBoardCoords)) {
     		cout << "Failed to visualise" << endl;
     		return -1;
     	}

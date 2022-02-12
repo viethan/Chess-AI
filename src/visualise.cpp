@@ -143,7 +143,7 @@ void close_visualise()
 	SDL_Quit(); // gives memory leak?
 }
 
-bool visualise() {
+bool visualise(int **board) {
 	if (SDL_BlitSurface(gBoardSurface, NULL, gScreenSurface, NULL) == -1) {
         cout << "Error while blitting the board" << endl;
         return 0;
@@ -153,13 +153,13 @@ bool visualise() {
     if (gColour == WHITE) {
         for (int row = 0; row < BOARD_HEIGHT; row++) {
         	for (int column = 0; column < BOARD_WIDTH; column++) {
-    			if (gBoardCoords[row][column] != EMPTY) {
+    			if (board[row][column] != EMPTY) {
     				dstrect.x = BORDER_OFFSET + BOARD_OFFSET * column;
     				dstrect.y = BORDER_OFFSET + BOARD_OFFSET * row;
     				dstrect.w = 75;
     				dstrect.h = 75;
         			
-        			if (SDL_BlitSurface(gPieceSurfaces[gBoardCoords[row][column]], NULL, gScreenSurface, &dstrect) == -1 ){
+        			if (SDL_BlitSurface(gPieceSurfaces[board[row][column]], NULL, gScreenSurface, &dstrect) == -1 ){
             			cout << "Error while blitting piece" << endl;
             			return 0;
         			}		
@@ -169,13 +169,13 @@ bool visualise() {
     } else {
     	for (int row = 7; row >= 0; row--) {
         	for (int column = 7; column >= 0; column--) {
-    			if (gBoardCoords[row][column] != EMPTY) {
+    			if (board[row][column] != EMPTY) {
     				dstrect.x = BORDER_OFFSET + BOARD_OFFSET * (7 - column);
     				dstrect.y = BORDER_OFFSET + BOARD_OFFSET * (7 - row);
     				dstrect.w = 75;
     				dstrect.h = 75;
         			
-        			if (SDL_BlitSurface(gPieceSurfaces[gBoardCoords[row][column]], NULL, gScreenSurface, &dstrect) == -1 ){
+        			if (SDL_BlitSurface(gPieceSurfaces[board[row][column]], NULL, gScreenSurface, &dstrect) == -1 ){
             			cout << "Error while blitting piece" << endl;
             			return 0;
         			}		
