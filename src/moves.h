@@ -48,7 +48,7 @@ bool checked_enemyKing(int** board, int kingRow, int kingColumn, bool colour);
 bool checked_diagonals(int** board, int kingRow, int kingColumn, bool colour);
 bool checked_rankFile(int** board, int kingRow, int kingColumn, bool colour);
 
-
+bool string2move(string input, Move* target);
 
 
 

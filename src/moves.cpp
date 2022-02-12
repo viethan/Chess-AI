@@ -779,3 +779,15 @@ bool checked_knights(int** board, int kingRow, int kingColumn, bool colour) {
 
 	return false;
 }
+
+bool string2move(string input, Move* target) {
+	if (input.size() == 4 && 
+		( ('a' <= input[0] && input[0] <= 'h') || ('A' <= input[0] && input[0] <= 'H') ) &&
+		( '1' <= input[1] && input[1] <= '8' ) && 
+		( ('a' <= input[2] && input[2] <= 'h') || ('A' <= input[2] && input[2] <= 'H') ) &&
+		( '1' <= input[3] && input[3] <= '8' ) ) {
+			return 1;
+	}
+
+	return 0;
+}

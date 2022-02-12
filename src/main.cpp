@@ -53,8 +53,7 @@ int main(int argc,char *argv[]){
 
     SDL_CreateThread(PollEvents, "TestThread", (void *)NULL);
 
-    bool quit = false;
-    while (!quit) {
+    while (true) {
         SDL_Thread *thread;
         int         threadReturnValue;
 
@@ -64,16 +63,24 @@ int main(int argc,char *argv[]){
     	}
 
         string input;
-        cin >> input;
-        cout << "Input string: " << input << endl;
+        Move userMove;
+        bool validInput = false;
+        while (!validInput) {
+            cin >> input;
 
-        // Quit
-        if (input.compare("quit") == 0) {
-            quit = true;
+            if (input.compare("quit") == 0) { break; }
+            if (string2move(input, &userMove)) { validInput = true; } 
+            else {
+                cout << "bad input" << endl;
+            }
         }
 
-        // Check if valid move; if valid, perform move
-        // else, input another move
+        if (input.compare("quit") == 0) break;
+                
+
+        // if (check_move(userMove, gBoardCoords, gColour)) {
+
+        // }
 
         // Let the AI choose its move
 
