@@ -6,6 +6,5 @@ enum Pieces { EMPTY, wPawn, wKnight, wBishop, wRook, wQueen, wKing, bPawn, bKnig
 enum Colour { WHITE = 0, BLACK = 1 };
 const int BOARD_HEIGHT = 8;
 const int BOARD_WIDTH = 8;
-extern int** gBoardCoords;
 
 #endif

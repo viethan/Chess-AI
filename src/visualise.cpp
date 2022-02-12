@@ -140,7 +140,7 @@ void close_visualise()
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 	IMG_Quit();
-	SDL_Quit(); // gives memory leak?
+	//SDL_Quit(); // gives memory leak?
 }
 
 bool visualise(int **board) {

@@ -2,7 +2,6 @@
 #include <cstdlib> 
 #include <ctime> 
 #include "moves.h"
-#include "forall.h"
 #include "minimax.h"
 #include "visualise.h"
 using namespace std;
@@ -43,7 +42,7 @@ int selectPlayer() {
     return n;
 }
 
-void userMoves() {
+int** userMoves(int** board) {
     string input;
     Move userMove;
     bool validInput = false;
@@ -52,44 +51,44 @@ void userMoves() {
 
         if (input.compare("quit") == 0) { 
             QUIT = true;
-            return;
+            free_board(board);
+            return NULL;
         }
 
         if (string2move(input, &userMove) && 
-            check_move(userMove, gBoardCoords, gColour)) 
+            check_move(userMove, board, gColour)) 
             validInput = true; 
         else cout << "bad input" << endl;
     }
 
     int** temp;
-    temp = make_move(userMove, gBoardCoords);
-    free_board(gBoardCoords);
-    gBoardCoords = temp;
+    temp = make_move(userMove, board);
+    free_board(board);
+    return temp;
 }
 
-void AIMoves() {
-    Move AIMove = getOptimalMove(gBoardCoords, !gColour);
+int** AIMoves(int** board) {
+    Move AIMove = getOptimalMove(board, !gColour);
 
     int** temp;
-    temp = make_move(AIMove, gBoardCoords);
-    free_board(gBoardCoords);
-    gBoardCoords = temp;
+    temp = make_move(AIMove, board);
+    free_board(board);
     SDL_Delay(3000);
+    return temp;
 }
 
-int init_main() {
+int** init_main() { 
     if (!init_SDL()) {
         cout << "Failed to initialize SDL" << endl;
-        return -1;
+        return NULL;
     }
 
     if (!loadMedia()) {
         cout << "Failed to load media" << endl;
-        return -1;
+        return NULL;
     }
 
-    init_board();
-    return 0;
+    return init_board();
 }
 
 int main(int argc,char *argv[]){
@@ -108,24 +107,26 @@ int main(int argc,char *argv[]){
         playerMoves = false;
     }
 
-    if (init_main() != 0) return -1;
+    int** board = init_main();
+    if (board == NULL) return -1;
+    
     while (!QUIT) {
-        if (!visualise(gBoardCoords)) {
+        if (!visualise(board)) {
     		cout << "Failed to visualise" << endl;
     		return -1;
     	}
 
         if (playerMoves) {
-            userMoves();
+            board = userMoves(board);
             playerMoves = false;
         } else {
-            AIMoves();
+            board = AIMoves(board);
             playerMoves = true;
         }
     }
 
+    if (board != NULL) free_board(board); // technically optional
     SDL_WaitThread(thread, &threadReturnValue);
     close_visualise();
-    close_moves();
     return 0;
 }

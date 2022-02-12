@@ -16,10 +16,7 @@ struct Move {
 };
 
 // Initialise the board with default pieces
-void init_board();
-
-// Frees everything board/move related
-void close_moves();
+int** init_board();
 
 // Returns a pointer to a hard copy of the board
 int** copy_board(int **board);

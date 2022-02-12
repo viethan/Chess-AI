@@ -1,40 +1,33 @@
 #include "moves.h"
 
-int** gBoardCoords = NULL;
-
-void init_board() {
+int** init_board() {
 	wChecked = false;
 	bChecked = false;
-	gBoardCoords = new int*[BOARD_HEIGHT];
+	int** board = new int*[BOARD_HEIGHT];
 
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		switch (i) {
 			case 0:
-				gBoardCoords[i] = new int[BOARD_WIDTH]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
+				board[i] = new int[BOARD_WIDTH]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
 				break;
 			case 1:
-				gBoardCoords[i] = new int[BOARD_WIDTH]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
+				board[i] = new int[BOARD_WIDTH]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
 				break;
 			case 6:
-				gBoardCoords[i] = new int[BOARD_WIDTH]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
+				board[i] = new int[BOARD_WIDTH]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
 				break;
 			case 7:
-				gBoardCoords[i] = new int[BOARD_WIDTH]{wRook, wKnight, wBishop, wQueen, wKing, wBishop, wKnight, wRook};
+				board[i] = new int[BOARD_WIDTH]{wRook, wKnight, wBishop, wQueen, wKing, wBishop, wKnight, wRook};
 				break;
 			default:
-				gBoardCoords[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY}; 	 	
+				board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY}; 	 	
 		}		
 	}
+
+	return board;
 }
 
-void close_moves() {
-	for (int i = 0; i < BOARD_HEIGHT; i++) {
-		delete gBoardCoords[i];
-	}
-	delete gBoardCoords;
-}
-
-int** copy_board(int **board) {
+int** copy_board(int** board) {
 	int** copy = new int*[BOARD_HEIGHT];
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		copy[i] = new int[BOARD_WIDTH];
