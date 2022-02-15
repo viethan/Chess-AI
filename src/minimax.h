@@ -18,6 +18,6 @@ struct MoveEval {
 
 int eval(int **board);
 Move getOptimalMove(int **board, bool colour);
-MoveEval minimax(int **board, int depth, bool colour);
+MoveEval minimax(int **board, int depth, int alpha, int beta, bool colour);
 
 #endif
