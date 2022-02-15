@@ -6,16 +6,16 @@ int** init_board() {
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		switch (i) {
 			case 0:
-				//board[i] = new int[BOARD_WIDTH]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
-				board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, bKing};
+				board[i] = new int[BOARD_WIDTH]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
+				//board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, bKing};
 				break;
 			case 1:
-				//board[i] = new int[BOARD_WIDTH]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
-				board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
+				board[i] = new int[BOARD_WIDTH]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
+				//board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
 				break;
 			case 6:
-				//board[i] = new int[BOARD_WIDTH]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
-				board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
+				board[i] = new int[BOARD_WIDTH]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
+				//board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
 				break;
 			case 7:
 				board[i] = new int[BOARD_WIDTH]{wRook, wKnight, wBishop, wQueen, wKing, wBishop, wKnight, wRook};
@@ -65,7 +65,6 @@ std::vector<Move> get_moves(int **board, bool colour) {
 		colourLower = 1;
 		colourUpper = 6;
 	} else {
-		cout << "Black here" << endl;
 		colourLower = 7;
 		colourUpper = 12;
 	}
@@ -110,11 +109,11 @@ std::vector<Move> get_moves(int **board, bool colour) {
 	// We have to make sure that our king is not accidentally checked
 	// self-inflicting discovered attack
 	// also helps if the king was checked to begin with
-	cout << "getMoves calling checked()" << endl;
-	cout << "Before: " << moves.size() << endl;
-	for (int i = 0; i < moves.size(); ++i) {
-        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
-    }
+	// cout << "getMoves calling checked()" << endl;
+	// cout << "Before: " << moves.size() << endl;
+	// for (int i = 0; i < moves.size(); ++i) {
+ //        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
+ //    }
 
 	int **temp_copy;
 	for (vector<Move>::iterator it = moves.begin(); it != moves.end();) {
@@ -127,10 +126,10 @@ std::vector<Move> get_moves(int **board, bool colour) {
 		free_board(temp_copy);
     }
 
-	cout << "After: " << moves.size() << endl;
-	for (int i = 0; i < moves.size(); ++i) {
-        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
-    }
+	// cout << "After: " << moves.size() << endl;
+	// for (int i = 0; i < moves.size(); ++i) {
+ //        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
+ //    }
 
 	return moves;
 }
@@ -504,7 +503,7 @@ bool checked(int **board, bool colour) {
 
 	if (kingRow == -1 || kingColumn == -1) return true;
 
-	cout << "King coordinates: " << kingRow << kingColumn << endl;
+	//cout << "King coordinates: " << kingRow << kingColumn << endl;
 	if (checked_knights(board, kingRow, kingColumn, colour) ||
 		checked_pawns(board, kingRow, kingColumn, colour) ||
 		checked_enemyKing(board, kingRow, kingColumn, colour) ||
@@ -816,7 +815,6 @@ bool check_move(Move tryMove, int** board, bool colour) {
 }
 
 int gameOver(int** board, bool colour) {
-	cout << "gameOver calling checked()" << endl;
 	vector<Move> colourMoves = get_moves(board, colour);
 	if (colourMoves.size() == 0) {
 		if (checked(board, colour)) return LOSE;

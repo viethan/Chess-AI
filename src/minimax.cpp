@@ -56,12 +56,11 @@ Move getOptimalMove(int **board, bool colour) {
 }
 
 MoveEval minimax(int **board, int depth, int alpha, int beta, bool colour) {
-	cout << "Minimax calling checked" << endl;
 	vector<Move> nextMoves = get_moves(board, colour);
 	// Game over, colour is being checked and has no moves
 	if (nextMoves.size() == 0 && checked(board, colour)) {
-		if (colour == WHITE) return MoveEval{ Move{}, numeric_limits<int>::min() };
-		else  return MoveEval{ Move{}, numeric_limits<int>::max() };
+		if (colour == WHITE) return MoveEval{ Move{}, numeric_limits<int>::min() + 1 };
+		else  return MoveEval{ Move{}, numeric_limits<int>::max() - 1 };
 	}
 
 	// Stalemate will call eval() as usual
