@@ -12,7 +12,7 @@ using namespace std;
 /*
 
 Potential Improvements:
-- sort moves for better pruning
+- sort moves based on score for better pruning
 - king endgame table
 
 */ 
@@ -23,12 +23,12 @@ struct MoveEval {
 	int score;
 };
 
-const int PawnVal = 100;
-const int KnightVal = 320;
-const int BishopVal = 330;
-const int RookVal = 500;
-const int QueenVal = 900;
-const int KingVal = 20000;
+const int pawnVal = 100;
+const int knightVal = 320;
+const int bishopVal = 330;
+const int rookVal = 500;
+const int queenVal = 900;
+const int kingVal = 20000;
 
 const int kingTable[8][8] = {
 	{-30, -40, -40, -50, -50, -40, -40, -30},
