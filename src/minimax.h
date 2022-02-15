@@ -17,7 +17,7 @@ Potential Improvements:
 
 */ 
 
-const int MAX_DEPTH = 3; // must be >= 1
+const int MAX_DEPTH = 1; // must be >= 1
 struct MoveEval {
 	Move move;
 	int score;
