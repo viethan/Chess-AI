@@ -83,6 +83,6 @@ MoveEval minimax(int **board, int depth, int alpha, int beta, bool colour) {
 			else beta = min(beta, eval.score);
 			if (beta <= alpha) break;
 	}
-
+	cout << compareEval.score << endl;
 	return compareEval;
 }

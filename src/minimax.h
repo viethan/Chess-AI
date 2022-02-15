@@ -14,10 +14,16 @@ using namespace std;
 Potential Improvements:
 - sort moves based on score for better pruning
 - king endgame table
+- try to differentiate between moves of the same value (especially those with +/- inf)
+- there are cases when the king is literally captured. In that case, checked() will return True
+- option to resign to the AI
+- piece update thing
+- en passant
+- castling
 
 */ 
 
-const int MAX_DEPTH = 3; // must be >= 1
+const int MAX_DEPTH = 4; // must be >= 1
 struct MoveEval {
 	Move move;
 	int score;

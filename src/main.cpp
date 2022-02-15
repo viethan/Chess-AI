@@ -26,11 +26,15 @@ int selectPlayer() {
     
     while(!validInput) {
         cout << "Enter 0 for White, 1 for Black, 2 for Random" << endl;
+        cout << "Type quit in order to exit" << endl;
         cin >> input;
         if (input.size() == 1 && 
             (input[0] == '0' || input[0] == '1' || input[0] == '2')) {
             validInput = true;
             n = input[0] - '0';
+        } else if (input.compare("quit") == 0) { 
+            QUIT = true;
+            return -1;
         }
     }
 
@@ -88,7 +92,7 @@ int** AIMoves(int** board, bool colour) {
     int** temp;
     temp = make_move(AIMove, board);
     free_board(board);
-    SDL_Delay(3000);
+    //SDL_Delay(3000);
     return temp;
 }
 
@@ -126,28 +130,31 @@ int main(int argc,char *argv[]){
     int         threadReturnValue;
     thread = SDL_CreateThread(PollEvents, "Events", (void *)NULL);
 
-    bool playerMoves;
-    bool colour = selectPlayer();
-    if (colour == WHITE) {
-        cout << "You are white" << endl;
-        playerMoves = true;
-    } else { 
-        cout << "You are black" << endl;
-        playerMoves = false;
-    }
-
-    history = vector<string>();
-    int** board = init_main(colour);
-    if (board == NULL) return -1;
-
-    int status = CONTINUE;
+    bool prevWindow = false;
     while (!QUIT) {
-        if (!visualise(board, colour)) {
-    		cout << "Failed to visualise" << endl;
-    		return -1;
-    	}
+        bool playerMoves;
+        int colour = selectPlayer();
+        if (colour == WHITE) {
+            cout << "You are white" << endl;
+            playerMoves = true;
+        } else if (colour == BLACK) { 
+            cout << "You are black" << endl;
+            playerMoves = false;
+        } else if (colour == -1) break;
 
-        if (status == CONTINUE) {
+        history = vector<string>();
+        if (prevWindow == true) close_visualise();
+        int** board = init_main(colour);
+        prevWindow = true;
+        if (board == NULL) return -1;
+
+        int status = CONTINUE;
+        while (status == CONTINUE && !QUIT) {
+            if (!visualise(board, colour)) {
+    		  cout << "Failed to visualise" << endl;
+    		  return -1;
+    	    }
+
             if (playerMoves) {
                 board = userMoves(board, colour);
                 playerMoves = false;
@@ -157,16 +164,22 @@ int main(int argc,char *argv[]){
                 playerMoves = true;                
                 status = status_check(board, colour);
             }
+
+            cout << "\033[2J\033[1;1H";
+            for (vector<string>::iterator it = history.begin(); it != history.end(); it++) {
+                cout << *it << endl;
+            }
         }
 
-        cout << "\033[2J\033[1;1H";
-        for (vector<string>::iterator it = history.begin(); it != history.end(); it++) {
-            cout << *it << endl;
+        if (board != NULL) free_board(board); // technically optional
+        if (!visualise(board, colour)) {
+              cout << "Failed to visualise" << endl;
+              return -1;
         }
+        cout << "Game Over!" << endl;
     }
 
-    if (board != NULL) free_board(board); // technically optional
+    if (prevWindow == true) close_visualise();
     SDL_WaitThread(thread, &threadReturnValue);
-    close_visualise();
     return 0;
 }
