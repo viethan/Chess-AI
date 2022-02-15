@@ -7,12 +7,15 @@ int** init_board() {
 		switch (i) {
 			case 0:
 				board[i] = new int[BOARD_WIDTH]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
+				//board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, bKing};
 				break;
 			case 1:
 				board[i] = new int[BOARD_WIDTH]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
+				//board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
 				break;
 			case 6:
 				board[i] = new int[BOARD_WIDTH]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
+				//board[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
 				break;
 			case 7:
 				board[i] = new int[BOARD_WIDTH]{wRook, wKnight, wBishop, wQueen, wKing, wBishop, wKnight, wRook};
@@ -106,6 +109,7 @@ std::vector<Move> get_moves(int **board, bool colour) {
 	// We have to make sure that our king is not accidentally checked
 	// self-inflicting discovered attack
 	// also helps if the king was checked to begin with
+	cout << "getMoves calling checked()" << endl;
 	int **temp_copy;
 	for (vector<Move>::iterator it = moves.begin(); it != moves.end();) {
 		if (checked(temp_copy = make_move(Move{it->srcRow, it->srcCol, it->destRow, it->destCol}, board), colour)) {
@@ -480,7 +484,7 @@ std::vector<Move> kingMove(int** board, int row, int column, bool colour) {
 
 bool checked(int **board, bool colour) {
 	// Find the king in the specified colour
-	int kingRow, kingColumn;
+	int kingRow = -1, kingColumn = -1;
 
 	for (int row = 0; row < BOARD_HEIGHT; row++) {
 		for (int column = 0; column < BOARD_WIDTH; column++) {
@@ -492,6 +496,9 @@ bool checked(int **board, bool colour) {
 		}
 	}
 
+	if (kingRow == -1 || kingColumn == -1) return true;
+
+	cout << "King coordinates: " << kingRow << kingColumn << endl;
 	if (checked_knights(board, kingRow, kingColumn, colour) ||
 		checked_pawns(board, kingRow, kingColumn, colour) ||
 		checked_enemyKing(board, kingRow, kingColumn, colour) ||
@@ -511,13 +518,13 @@ bool checked_enemyKing(int** board, int kingRow, int kingColumn, bool colour) {
 			return true;
 		}
 		// bottom-left
-		if ((colour == WHITE && board[kingRow+1][kingColumn-1] == bKing) ||
-			(colour == BLACK && board[kingRow+1][kingColumn-1] == wKing)) {
+		if (kingColumn-1 >= 0 && ((colour == WHITE && board[kingRow+1][kingColumn-1] == bKing) ||
+					(colour == BLACK && board[kingRow+1][kingColumn-1] == wKing))) {
 			return true;
 		}
 		// bottom-right
-		if ((colour == WHITE && board[kingRow+1][kingColumn+1] == bKing) ||
-			(colour == BLACK && board[kingRow+1][kingColumn+1] == wKing)) {
+		if (kingColumn+1 < BOARD_WIDTH && ((colour == WHITE && board[kingRow+1][kingColumn+1] == bKing) ||
+					(colour == BLACK && board[kingRow+1][kingColumn+1] == wKing))) {
 			return true;
 		}
 	}
@@ -529,13 +536,13 @@ bool checked_enemyKing(int** board, int kingRow, int kingColumn, bool colour) {
 			return true;
 		}
 		// upper-left
-		if ((colour == WHITE && board[kingRow-1][kingColumn-1] == bKing) ||
-			(colour == BLACK && board[kingRow-1][kingColumn-1] == wKing)) {
+		if (kingColumn-1 >= 0 && ((colour == WHITE && board[kingRow-1][kingColumn-1] == bKing) ||
+					(colour == BLACK && board[kingRow-1][kingColumn-1] == wKing))) {
 			return true;
 		}
 		// upper-right
-		if ((colour == WHITE && board[kingRow-1][kingColumn+1] == bKing) ||
-			(colour == BLACK && board[kingRow-1][kingColumn+1] == wKing)) {
+		if (kingColumn+1 < BOARD_WIDTH && ((colour == WHITE && board[kingRow-1][kingColumn+1] == bKing) ||
+					(colour == BLACK && board[kingRow-1][kingColumn+1] == wKing))) {
 			return true;
 		}
 	}
@@ -800,4 +807,15 @@ bool check_move(Move tryMove, int** board, bool colour) {
     }
 
     return false;
+}
+
+int gameOver(int** board, bool colour) {
+	cout << "gameOver calling checked()" << endl;
+	vector<Move> colourMoves = get_moves(board, colour);
+	if (colourMoves.size() == 0) {
+		if (checked(board, colour)) return LOSE;
+		return STALEMATE;
+	}
+
+	return CONTINUE; 
 }

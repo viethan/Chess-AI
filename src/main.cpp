@@ -52,8 +52,7 @@ int** userMoves(int** board, bool colour) {
 
         if (input.compare("quit") == 0) { 
             QUIT = true;
-            free_board(board);
-            return NULL;
+            return board;
         }
 
         if (string2move(input, &userMove) && 
@@ -107,6 +106,20 @@ int** init_main(bool colour) {
     return init_board();
 }
 
+int status_check(int** board, bool colour) {
+    int status = gameOver(board, colour);    
+    if (status != CONTINUE) {
+        if (status == LOSE) {
+            if (colour == WHITE) history.push_back("Black wins");
+            else history.push_back("White wins");
+        } else if (status == STALEMATE) {
+            history.push_back("Stalemate");
+        }
+    }
+
+    return status;
+} 
+
 int main(int argc,char *argv[]){
     // These will prevent our game window to be deemed unresponsive
     SDL_Thread *thread;
@@ -127,18 +140,23 @@ int main(int argc,char *argv[]){
     int** board = init_main(colour);
     if (board == NULL) return -1;
 
+    int status = CONTINUE;
     while (!QUIT) {
         if (!visualise(board, colour)) {
     		cout << "Failed to visualise" << endl;
     		return -1;
     	}
 
-        if (playerMoves) {
-            board = userMoves(board, colour);
-            playerMoves = false;
-        } else {
-            board = AIMoves(board, !colour);
-            playerMoves = true;
+        if (status == CONTINUE) {
+            if (playerMoves) {
+                board = userMoves(board, colour);
+                playerMoves = false;
+                if (!QUIT) status = status_check(board, !colour);
+            } else {
+                board = AIMoves(board, !colour);
+                playerMoves = true;                
+                status = status_check(board, colour);
+            }
         }
 
         cout << "\033[2J\033[1;1H";

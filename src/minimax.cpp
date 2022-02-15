@@ -52,19 +52,26 @@ int eval(int **board) {
 
 Move getOptimalMove(int **board, bool colour) {
 	MoveEval best = minimax(board, MAX_DEPTH, numeric_limits<int>::min(), numeric_limits<int>::max(), colour);
-	cout << "Best Move for AI: " << best.move.srcRow << best.move.srcCol << " " << best.move.destRow << best.move.destCol << endl;
 	return best.move;
 }
 
 MoveEval minimax(int **board, int depth, int alpha, int beta, bool colour) {
-	if (depth == 0) return MoveEval{ Move{}, eval(board) };
-	// || gameOver(board)
+	cout << "Minimax calling checked" << endl;
+	vector<Move> nextMoves = get_moves(board, colour);
+	// Game over, colour is being checked and has no moves
+	if (nextMoves.size() == 0 && checked(board, colour)) {
+		if (colour == WHITE) return MoveEval{ Move{}, numeric_limits<int>::min() };
+		else  return MoveEval{ Move{}, numeric_limits<int>::max() };
+	}
+
+	// Stalemate will call eval() as usual
+	if (depth == 0 || nextMoves.size() == 0) 
+		return MoveEval{ Move{}, eval(board) };	  
 
 	MoveEval eval, compareEval = MoveEval{}; 
 	if (colour == WHITE) compareEval.score = numeric_limits<int>::min(); // maximizing
 	else if (colour == BLACK) compareEval.score = numeric_limits<int>::max(); // minimizing
 
-	vector<Move> nextMoves = get_moves(board, colour);
 	for (vector<Move>::iterator it = nextMoves.begin(); it != nextMoves.end(); it++) {
 			int** nextBoard = make_move(*it, board);
 			eval = minimax(nextBoard, depth-1, alpha, beta, !colour);

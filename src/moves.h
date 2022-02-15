@@ -45,6 +45,6 @@ bool checked_rankFile(int** board, int kingRow, int kingColumn, bool colour);
 bool string2move(string input, Move* target);
 bool check_move(Move tryMove, int** board, bool colour);
 
-//int stalemate_win(int **board, bool colour); // 0 = nothing, 1 = win, 2 = lose, 3 = stalemate; probably enum
+int gameOver(int** board, bool colour);
 
 #endif
