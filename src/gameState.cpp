@@ -1,30 +1,53 @@
-#include "game.h"
+#include "gameState.h"
 
 int selectPlayer() {
-    int n;
+    bool player;
     string input;
-    bool validInput = false;
     
-    while(!validInput) {
+    while(true) {
         cout << "Enter 0 for White, 1 for Black, 2 for Random" << endl;
         cout << "Type quit in order to exit" << endl;
         cin >> input;
-        if (input.size() == 1 && 
-            (input[0] == '0' || input[0] == '1' || input[0] == '2')) {
-            validInput = true;
-            n = input[0] - '0';
-        } else if (input.compare("quit") == 0) { 
+        
+        // player wants to quit
+        if (input.compare("quit") == 0) { 
             QUIT = true;
             return -1;
         }
+
+        if (input.size() == 1) {
+            // player wants to play white/black        
+            if (input[0] == '0' || input[0] == '1') {
+                player = input[0] - '0';
+                break; 
+            }
+
+            // player chose to play a random colour
+            if (input[0] == '2') {
+                srand(static_cast<unsigned int>(time(nullptr))); 
+                player = rand() % 2;
+                break;        
+            }
+        }  
     }
 
-    if (n == 2) {
-        srand(static_cast<unsigned int>(time(nullptr))); 
-        return rand() % 2;
+    if (player == WHITE) cout << "You are white" << endl;
+    else cout << "You are black" << endl;
+    return player;
+}
+
+int** init_main(bool colour) { 
+    if (!init_SDL()) {
+        cout << "Failed to initialize SDL" << endl;
+        return NULL;
     }
 
-    return n;
+    if (!loadMedia(colour)) {
+        cout << "Failed to load media" << endl;
+        return NULL;
+    }
+
+    return init_board();
 }
 
 int** userMoves(int** board, bool colour) {
@@ -75,20 +98,6 @@ int** AIMoves(int** board, bool colour) {
     free_board(board);
     //SDL_Delay(3000);
     return temp;
-}
-
-int** init_main(bool colour) { 
-    if (!init_SDL()) {
-        cout << "Failed to initialize SDL" << endl;
-        return NULL;
-    }
-
-    if (!loadMedia(colour)) {
-        cout << "Failed to load media" << endl;
-        return NULL;
-    }
-
-    return init_board();
 }
 
 int status_check(int** board, bool colour) {

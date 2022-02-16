@@ -1,5 +1,5 @@
 #include <iostream>
-#include "game.h"
+#include "gameState.h"
 using namespace std;
 
 bool QUIT;
@@ -25,22 +25,17 @@ int main(int argc,char *argv[]){
     bool prevWindow = false;
     QUIT = false;
     while (!QUIT) {
-        bool playerMoves;
+        bool playerMoves = false;
         int colour = selectPlayer();
-        if (colour == WHITE) {
-            cout << "You are white" << endl;
-            playerMoves = true;
-        } else if (colour == BLACK) { 
-            cout << "You are black" << endl;
-            playerMoves = false;
-        } else if (colour == -1) break;
+        if (colour == WHITE) playerMoves = true;
+        if (colour == -1) break;
 
         history = vector<string>();
         if (prevWindow == true) close_visualise();
         int** board = init_main(colour);
-        prevWindow = true;
         if (board == NULL) return -1;
-
+        prevWindow = true;
+        
         int status = CONTINUE;
         while (status == CONTINUE && !QUIT) {
             if (!visualise(board, colour)) {
