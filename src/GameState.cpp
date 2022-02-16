@@ -12,18 +12,8 @@ GameState::GameState() {
         else this->usersTurn = false;
         this->history = vector<string>();
         this->board = init_main(this->userColour); // colour to rotate board or not
+        if (this->board == NULL) this->status = QUIT;
     }
-
-
-    
-/*    if (prevWindow == true) close_visualise(); // in order to not make too many windows
-    if (board == NULL) return -1; // sdl or load_media didn't work
-    prevWindow = true;
-    if (colour == -1) break; // has quit while choosing the colour
-
-    errors errors
-
-    */
 }
 
 GameState::~GameState() {
