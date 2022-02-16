@@ -25,7 +25,7 @@ class GameState {
 		Board* board;
 		std::vector<string> history;
 
-		void status_check(bool colour);
+		void status_check();
 		int selectPlayer();
 };
 

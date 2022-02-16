@@ -19,8 +19,6 @@ class Board {
 		bool checked(bool colour);
 		int gameOver();
 	private:
-		
-
 		void get_moves();
 		bool checked_knights(int kingRow, int kingColumn, bool colour);
 		bool checked_pawns(int kingRow, int kingColumn, bool colour);
@@ -30,3 +28,12 @@ class Board {
 };
 
 #endif
+
+/*
+
+The Board object should populate the moves vector
+once it's instantiated
+The only time it's not is in get_moves(), as we only need
+the board->pos; this also avoid infinite recursion
+
+*/

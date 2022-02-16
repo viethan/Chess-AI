@@ -92,7 +92,7 @@ void GameState::userMoves() {
     }
 
     this->usersTurn = false;
-    status_check(!this->userColour);
+    status_check(); // new board
 }
 
 void GameState::AIMoves() {
@@ -111,7 +111,7 @@ void GameState::AIMoves() {
     this->board = newBoard;
 
     this->usersTurn = true;
-    status_check(this->userColour);
+    status_check(); // new board
 }
 
 void GameState::printHistory() {
@@ -121,12 +121,15 @@ void GameState::printHistory() {
     }
 }
 
-void GameState::status_check(bool colour) { // ????????????????????????????????????????????????
+// it will checked the status of the game
+// after the AI/user played the move
+void GameState::status_check() {
+    // new board
     int newStatus = this->board->gameOver();    
     
     if (newStatus != CONTINUE) {
         if (newStatus == LOSE) {
-            if (colour == WHITE) history.push_back("Black wins");
+            if (this->board->turn == WHITE) history.push_back("Black wins");
             else this->history.push_back("White wins");
         } else if (newStatus == STALEMATE) {
             this->history.push_back("Stalemate");

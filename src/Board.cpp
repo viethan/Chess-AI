@@ -1,20 +1,21 @@
 #include "Board.h"
 
+// default start board
 Board::Board() {
 	this->pos = new int*[BOARD_HEIGHT];
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		switch (i) {
 			case 0:
-				//this->pos[i] = new int[BOARD_WIDTH]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
-				this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, bKing};
+				this->pos[i] = new int[BOARD_WIDTH]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
+				//this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, bKing};
 				break;
 			case 1:
-				//this->pos[i] = new int[BOARD_WIDTH]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
-				this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
+				this->pos[i] = new int[BOARD_WIDTH]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
+				//this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
 				break;
 			case 6:
-				//this->pos[i] = new int[BOARD_WIDTH]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
-				this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
+				this->pos[i] = new int[BOARD_WIDTH]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
+				//this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
 				break;
 			case 7:
 				this->pos[i] = new int[BOARD_WIDTH]{wRook, wKnight, wBishop, wQueen, wKing, wBishop, wKnight, wRook};
@@ -50,13 +51,15 @@ Board::~Board() {
 	delete this->pos;
 }
 
-
-Board* Board::make_move(Move move, bool getMoves) {  // ???????????????????????????????????????????
+// creates a new Board obj with the updated positions
+// also makes sure to NOT the turn
+// get_moves() only if needed
+Board* Board::make_move(Move move, bool getMoves) {
 	Board* newBoard = new Board(this->pos);
 	newBoard->pos[move.destRow][move.destCol] = newBoard->pos[move.srcRow][move.srcCol]; 
 	newBoard->pos[move.srcRow][move.srcCol] = EMPTY;
 	newBoard->turn = !this->turn;
-	if (getMoves) newBoard->get_moves(); // this is so we don't recurse infinitely for no reason
+	if (getMoves) newBoard->get_moves();
 
 	return newBoard;
 }
@@ -109,15 +112,6 @@ void Board::get_moves() {
 		}
 	}
 
-	// We have to make sure that our king is not accidentally checked
-	// self-inflicting discovered attack
-	// also helps if the king was checked to begin with
-	// cout << "getMoves calling checked()" << endl;
-	// cout << "Before: " << moves.size() << endl;
-	// for (int i = 0; i < moves.size(); ++i) {
- //        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
- //    }
-
 	Board* tempBoard;
 	for (vector<Move>::iterator it = this->moves.begin(); it != this->moves.end();) {
 		tempBoard = make_move(Move{it->srcRow, it->srcCol, it->destRow, it->destCol}, false);
@@ -129,13 +123,10 @@ void Board::get_moves() {
 
 		delete tempBoard;
     }
-
-	// cout << "After: " << moves.size() << endl;
-	// for (int i = 0; i < moves.size(); ++i) {
- //        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
- //    }
 }
 
+// see if the move the user tries to play
+// is in the moves vector
 bool Board::check_move(Move tryMove) {
 	for (vector<Move>::iterator it = this->moves.begin(); it != this->moves.end(); it++) {
 		if (it->srcRow == tryMove.srcRow &&
@@ -147,10 +138,6 @@ bool Board::check_move(Move tryMove) {
     }
     return false;
 }
-
-
-
-
 
 
 bool Board::checked(bool colour) {
@@ -428,7 +415,7 @@ bool Board::checked_knights(int kingRow, int kingColumn, bool colour) {
 			return true;
 	}
 
-	// bottom-right1int Board::gameOver()
+	// bottom-right1
 	ro = kingRow + 2;
 	col = kingColumn + 1;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
@@ -447,7 +434,6 @@ bool Board::checked_knights(int kingRow, int kingColumn, bool colour) {
 	return false;
 }
 
-
 int Board::gameOver() {
 	if (this->moves.size() == 0) {
 		if (this->checked(this->turn)) return LOSE;
@@ -456,3 +442,17 @@ int Board::gameOver() {
 
 	return CONTINUE; 
 }
+
+
+	// We have to make sure that our king is not accidentally checked
+	// self-inflicting discovered attack
+	// also helps if the king was checked to begin with
+	// cout << "getMoves calling checked()" << endl;
+	// cout << "Before: " << moves.size() << endl;
+	// for (int i = 0; i < moves.size(); ++i) {
+ //        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
+ //    }
+		// cout << "After: " << moves.size() << endl;
+	// for (int i = 0; i < moves.size(); ++i) {
+ //        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
+ //    }
