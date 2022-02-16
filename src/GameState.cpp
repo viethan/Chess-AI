@@ -1,6 +1,6 @@
 #include "GameState.h"
 
-int** init_main(bool colour);
+Board* init_main(bool colour);
 
 GameState::GameState() {
     this->status = CONTINUE;
@@ -20,7 +20,7 @@ GameState::~GameState() {
     // only if a game was played to begin with
     if (this->board != NULL) {
         std::cout << "Game Over!" << std::endl;
-        free_board(this->board);
+        delete this->board;
     }
 }
 
@@ -60,7 +60,7 @@ int GameState::selectPlayer() {
 }
 
 void GameState::visualise() {
-    visBoard(this->board, this->userColour);
+    visBoard(this->board->pos, this->userColour);
 }
 
 void GameState::userMoves() {
@@ -77,13 +77,13 @@ void GameState::userMoves() {
         }
 
         if (string2move(input, &userMove) && 
-            check_move(userMove, this->board, this->userColour)) {
+            this->board->check_move(userMove)) {
                 if (this->userColour == WHITE) this->history.push_back("White " + input);    
                 else this->history.push_back("Black " + input);
 
-                int** newBoard;
-                newBoard = make_move(userMove, this->board);
-                free_board(this->board);
+                Board* newBoard;
+                newBoard = this->board->make_move(userMove, true);
+                delete this->board;
                 this->board = newBoard;
                 break;
         }
@@ -105,9 +105,9 @@ void GameState::AIMoves() {
     else
         this->history.push_back("Black " + srcCol + srcRow + destCol + destRow);
 
-    int** newBoard;
-    newBoard = make_move(AIMove, board);
-    free_board(board);
+    Board* newBoard;
+    newBoard = this->board->make_move(AIMove, true);
+    delete this->board;
     this->board = newBoard;
 
     this->usersTurn = true;
@@ -121,8 +121,8 @@ void GameState::printHistory() {
     }
 }
 
-void GameState::status_check(bool colour) {
-    int newStatus = gameOver(this->board, colour);    
+void GameState::status_check(bool colour) { // ????????????????????????????????????????????????
+    int newStatus = this->board->gameOver();    
     
     if (newStatus != CONTINUE) {
         if (newStatus == LOSE) {
@@ -140,7 +140,7 @@ void GameState::status_check(bool colour) {
 // initialises SDL
 // loads the media into memory
 // returns a new board with default setup
-int** init_main(bool colour) { 
+Board* init_main(bool colour) { 
     if (SDL_WasInit(SDL_INIT_EVERYTHING)) close_visualise();
     if (!init_SDL()) {
         cout << "Failed to initialize SDL" << endl;
@@ -152,5 +152,5 @@ int** init_main(bool colour) {
         return NULL;
     }
 
-    return init_board();
+    return new Board();
 }

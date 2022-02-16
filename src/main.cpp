@@ -30,10 +30,6 @@ int main(int argc,char *argv[]){
             currentGame->printHistory();
         }
 
-        // visualise the last move that led to
-        // the status != CONTINUE
-        // only when status != QUIT because either nothing to vis
-        // or already visualised (midgame)
         if (currentGame->status == QUIT) mainQuit = true;
         else currentGame->visualise();
         delete currentGame;
@@ -43,3 +39,9 @@ int main(int argc,char *argv[]){
     SDL_WaitThread(thread, &threadReturnValue);
     return 0;
 }
+
+/* Line 33, 34
+visualise the last move that led to
+the status != CONTINUE
+only when status != QUIT because either nothing to vis
+or already visualised (midgame) */

@@ -6,7 +6,7 @@
 #include <vector>
 #include <limits>
 #include "forall.h"
-#include "moves.h"
+#include "Board.h"
 using namespace std;
 
 /*
@@ -103,7 +103,7 @@ const int pawnTable[8][8] = {
 };
 
 int eval(int **board);
-Move getOptimalMove(int **board, bool colour);
-MoveEval minimax(int **board, int depth, int alpha, int beta, bool colour);
+Move getOptimalMove(Board* board, bool colour);
+MoveEval minimax(Board* board, int depth, int alpha, int beta, bool colour);
 
 #endif

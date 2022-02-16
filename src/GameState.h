@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstdlib> 
 #include <ctime> 
-#include "moves.h"
+#include "Board.h"
 #include "minimax.h"
 #include "visualise.h"
 #include "forall.h"
@@ -22,7 +22,7 @@ class GameState {
 		void visualise();
 		void printHistory();
 	private:
-		int** board;
+		Board* board;
 		std::vector<string> history;
 
 		void status_check(bool colour);

@@ -50,35 +50,34 @@ int eval(int **board) {
 	return score;
 }
 
-Move getOptimalMove(int **board, bool colour) {
+Move getOptimalMove(Board* board, bool colour) {
 	MoveEval best = minimax(board, MAX_DEPTH, numeric_limits<int>::min(), numeric_limits<int>::max(), colour);
 	return best.move;
 }
 
-MoveEval minimax(int **board, int depth, int alpha, int beta, bool colour) {
-	vector<Move> nextMoves = get_moves(board, colour);
+MoveEval minimax(Board* board, int depth, int alpha, int beta, bool colour) { // colour???? also turn same as gamestate
 	// Game over, colour is being checked and has no moves
-	if (nextMoves.size() == 0 && checked(board, colour)) {
+	if (board->moves.size() == 0 && board->checked(colour)) {
 		if (colour == WHITE) return MoveEval{ Move{}, numeric_limits<int>::min() + 1 };
 		else  return MoveEval{ Move{}, numeric_limits<int>::max() - 1 };
 	}
 
 	// Stalemate will call eval() as usual
-	if (depth == 0 || nextMoves.size() == 0) 
-		return MoveEval{ Move{}, eval(board) };	  
+	if (depth == 0 || board->moves.size() == 0) 
+		return MoveEval{ Move{}, eval(board->pos) };	  
 
 	MoveEval eval, compareEval = MoveEval{}; 
 	if (colour == WHITE) compareEval.score = numeric_limits<int>::min(); // maximizing
 	else if (colour == BLACK) compareEval.score = numeric_limits<int>::max(); // minimizing
 
-	for (vector<Move>::iterator it = nextMoves.begin(); it != nextMoves.end(); it++) {
-			int** nextBoard = make_move(*it, board);
+	for (vector<Move>::iterator it = board->moves.begin(); it != board->moves.end(); it++) {
+			Board* nextBoard = board->make_move(*it, true);
 			eval = minimax(nextBoard, depth-1, alpha, beta, !colour);
 			if ((colour == WHITE && eval.score > compareEval.score) || 
 				(colour == BLACK && eval.score < compareEval.score)) 
 				compareEval = MoveEval{*it, eval.score};
 
-			free_board(nextBoard);
+			delete nextBoard;
 			if (colour == WHITE) alpha = max(alpha, eval.score);
 			else beta = min(beta, eval.score);
 			if (beta <= alpha) break;
