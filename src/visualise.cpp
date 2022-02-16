@@ -143,7 +143,7 @@ void close_visualise()
 	//SDL_Quit(); // gives memory leak?
 }
 
-bool visualise(int **board, bool colour) {
+bool visBoard(int **board, bool colour) {
 	if (SDL_BlitSurface(gBoardSurface, NULL, gScreenSurface, NULL) == -1) {
         cout << "Error while blitting the board" << endl;
         return 0;

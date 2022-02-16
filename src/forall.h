@@ -4,7 +4,7 @@
 
 enum Pieces { EMPTY, wPawn, wKnight, wBishop, wRook, wQueen, wKing, bPawn, bKnight, bBishop, bRook, bQueen, bKing };
 enum Colour { WHITE = 0, BLACK = 1 };
-enum GAME { CONTINUE, WIN, LOSE, STALEMATE };
+enum GAME { CONTINUE, WIN, LOSE, STALEMATE, QUIT };
 const int BOARD_HEIGHT = 8;
 const int BOARD_WIDTH = 8;
 

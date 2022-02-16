@@ -28,6 +28,6 @@ bool loadMedia(bool colour);
 // Frees media and shuts down SDL
 void close_visualise();
 // Make the current board appear in the window
-bool visualise(int **board, bool colour);
+bool visBoard(int **board, bool colour);
 
 #endif
