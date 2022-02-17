@@ -29,7 +29,7 @@ std::vector<pieceMove> pawnMove::findMoves(int** board, int row, int column, boo
 		}
 
 		if (row-1 >= 0 && column+1 < BOARD_WIDTH && 
-			enemyTeam.count(board[row-1][column-1])) {
+			enemyTeam.count(board[row-1][column+1])) {
 			moves.push_back(pieceMove(row, column, row-1, column+1));		
 		}
 	} else {
@@ -44,12 +44,12 @@ std::vector<pieceMove> pawnMove::findMoves(int** board, int row, int column, boo
 
 		// attack diagonally
 		if (row+1 < BOARD_HEIGHT && column-1 >= 0 && 
-			enemyTeam.count(board[row-1][column-1])) {
+			enemyTeam.count(board[row+1][column-1])) {
 			moves.push_back(pieceMove(row, column, row+1, column-1));		
 		}
 
 		if (row+1 < BOARD_HEIGHT && column+1 < BOARD_WIDTH && 
-			enemyTeam.count(board[row-1][column-1])) {
+			enemyTeam.count(board[row+1][column+1])) {
 			moves.push_back(pieceMove(row, column, row+1, column+1));		
 		}
 	}
