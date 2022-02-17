@@ -2,14 +2,14 @@
 
 std::vector<pieceMove> pawnMove::findMoves(int** board, int row, int column, bool colour) {
 	std::vector<pieceMove> moves = std::vector<pieceMove>();
-
+	std::unordered_set<int> myTeam, enemyTeam;
 	int colourLower, colourUpper;
 	if (colour == WHITE) {
-		colourLower = 1;
-		colourUpper = 6;
+		myTeam = WhiteTeam;
+		enemyTeam = BlackTeam;
 	} else {
-		colourLower = 7;
-		colourUpper = 12;
+		myTeam = BlackTeam;
+		enemyTeam = WhiteTeam;
 	}
 
 	if (colour == WHITE) {
@@ -23,13 +23,13 @@ std::vector<pieceMove> pawnMove::findMoves(int** board, int row, int column, boo
 		}
 
 		// attack diagonally
-		if (row-1 >= 0 && column-1 >= 0 && \
-			! (board[row-1][column-1] == EMPTY || (colourLower <= board[row-1][column-1] && board[row-1][column-1] <= colourUpper))) {
+		if (row-1 >= 0 && column-1 >= 0 && 
+			enemyTeam.count(board[row-1][column-1])) {
 			moves.push_back(pieceMove(row, column, row-1, column-1));		
 		}
 
-		if (row-1 >= 0 && column+1 < BOARD_WIDTH && \
-			! (board[row-1][column+1] == EMPTY || (colourLower <= board[row-1][column+1] && board[row-1][column+1] <= colourUpper))) {
+		if (row-1 >= 0 && column+1 < BOARD_WIDTH && 
+			enemyTeam.count(board[row-1][column-1])) {
 			moves.push_back(pieceMove(row, column, row-1, column+1));		
 		}
 	} else {
@@ -43,13 +43,13 @@ std::vector<pieceMove> pawnMove::findMoves(int** board, int row, int column, boo
 		}
 
 		// attack diagonally
-		if (row+1 < BOARD_HEIGHT && column-1 >= 0 && \
-			! (board[row+1][column-1] == EMPTY || (colourLower <= board[row+1][column-1] && board[row+1][column-1] <= colourUpper))) {
+		if (row+1 < BOARD_HEIGHT && column-1 >= 0 && 
+			enemyTeam.count(board[row-1][column-1])) {
 			moves.push_back(pieceMove(row, column, row+1, column-1));		
 		}
 
-		if (row+1 < BOARD_HEIGHT && column+1 < BOARD_WIDTH && \
-			! (board[row+1][column+1] == EMPTY || (colourLower <= board[row+1][column+1] && board[row+1][column+1] <= colourUpper))) {
+		if (row+1 < BOARD_HEIGHT && column+1 < BOARD_WIDTH && 
+			enemyTeam.count(board[row-1][column-1])) {
 			moves.push_back(pieceMove(row, column, row+1, column+1));		
 		}
 	}

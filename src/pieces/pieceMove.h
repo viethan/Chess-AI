@@ -2,7 +2,6 @@
 #ifndef PIECEMOVE_H
 #define PIECEMOVE_H
 
-#include <iostream>
 #include <vector>
 #include "../forall.h"
 
