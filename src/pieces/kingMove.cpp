@@ -2,52 +2,52 @@
 
 std::vector<pieceMove> kingMove::findMoves(int** board, int row, int column, bool colour) {
 	std::vector<pieceMove> moves = std::vector<pieceMove>();
-	int colourLower, colourUpper;
-	
+	std::unordered_set<int> myTeam, enemyTeam;
+
 	if (colour == WHITE) {
-		colourLower = 1;
-		colourUpper = 6;
+		myTeam = WhiteTeam;
+		enemyTeam = BlackTeam;
 	} else {
-		colourLower = 7;
-		colourUpper = 12;
+		myTeam = BlackTeam;
+		enemyTeam = WhiteTeam;
 	}
 
 	if (row+1 < BOARD_HEIGHT) {
 		// bottom
-		if (!(colourLower <= board[row+1][column] && board[row+1][column] <= colourUpper)) {
+		if (myTeam.count(board[row+1][column]) == 0) {
 			moves.push_back(pieceMove(row, column, row+1, column));
 		}
 		// bottom-left
-		if (column-1 >= 0 && (!(colourLower <= board[row+1][column-1] && board[row+1][column-1] <= colourUpper))) {
+		if (column-1 >= 0 && myTeam.count(board[row+1][column-1]) == 0) {
 			moves.push_back(pieceMove(row, column, row+1, column-1));
 		}
 		// bottom-right
-		if (column+1 < BOARD_WIDTH && (!(colourLower <= board[row+1][column+1] && board[row+1][column+1] <= colourUpper))) {
+		if (column+1 < BOARD_WIDTH && myTeam.count(board[row+1][column+1]) == 0) {
 			moves.push_back(pieceMove(row, column, row+1, column+1));
 		}
 	}
 
 	if (row-1 >= 0) {
 		// upper
-		if (!(colourLower <= board[row-1][column] && board[row-1][column] <= colourUpper)) {
+		if (myTeam.count(board[row-1][column]) == 0) {
 			moves.push_back(pieceMove(row, column, row-1, column));
 		}
 		// upper-left
-		if (column-1 >= 0 && (!(colourLower <= board[row-1][column-1] && board[row-1][column-1] <= colourUpper))) {
+		if (column-1 >= 0 && myTeam.count(board[row-1][column-1]) == 0) {
 			moves.push_back(pieceMove(row, column, row-1, column-1));
 		}
 		// upper-right
-		if (column+1 < BOARD_WIDTH && (!(colourLower <= board[row-1][column+1] && board[row-1][column+1] <= colourUpper))) {
+		if (column+1 < BOARD_WIDTH && myTeam.count(board[row-1][column+1]) == 0) {
 			moves.push_back(pieceMove(row, column, row-1, column+1));
 		}
 	}
 
 	// left
-	if (column-1 >= 0 && (!(colourLower <= board[row][column-1] && board[row][column-1] <= colourUpper))) {
+	if (column-1 >= 0 && myTeam.count(board[row][column-1]) == 0) {
 			moves.push_back(pieceMove(row, column, row, column-1));
 	}
 	// right
-	if (column+1 < BOARD_WIDTH && (!(colourLower <= board[row][column+1] && board[row][column+1] <= colourUpper))) {
+	if (column+1 < BOARD_WIDTH && myTeam.count(board[row][column+1]) == 0) {
 			moves.push_back(pieceMove(row, column, row, column+1));
 	}
 
