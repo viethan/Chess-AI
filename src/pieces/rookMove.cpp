@@ -2,21 +2,21 @@
 
 std::vector<pieceMove> rookMove::findMoves(int** board, int row, int column, bool colour) {
 	std::vector<pieceMove> moves = std::vector<pieceMove>();
+	std::unordered_set<int> myTeam, enemyTeam;
 
-	int colourLower, colourUpper;
 	if (colour == WHITE) {
-		colourLower = 1;
-		colourUpper = 6;
+		myTeam = WhiteTeam;
+		enemyTeam = BlackTeam;
 	} else {
-		colourLower = 7;
-		colourUpper = 12;
+		myTeam = BlackTeam;
+		enemyTeam = WhiteTeam;
 	}
 
 	// right of rook
 	for (int col = column+1; col < BOARD_WIDTH; col++) {
 		if (board[row][col] == EMPTY) { // empty square
 			moves.push_back(pieceMove(row, column, row, col));
-		} else if (colourLower <= board[row][col] && board[row][col] <= colourUpper) { // same colour
+		} else if (myTeam.count(board[row][col])) { // same colour
 			break;
 		} else { // first enemy encountered on the path
 			moves.push_back(pieceMove(row, column, row, col));
@@ -28,7 +28,7 @@ std::vector<pieceMove> rookMove::findMoves(int** board, int row, int column, boo
 	for (int col = column-1; col >= 0; col--) {
 		if (board[row][col] == EMPTY) { // empty square
 			moves.push_back(pieceMove(row, column, row, col));
-		} else if (colourLower <= board[row][col] && board[row][col] <= colourUpper) { // same colour
+		} else if (myTeam.count(board[row][col])) { // same colour
 			break;
 		} else { // first enemy encountered on the path
 			moves.push_back(pieceMove(row, column, row, col));
@@ -40,7 +40,7 @@ std::vector<pieceMove> rookMove::findMoves(int** board, int row, int column, boo
 	for (int ro = row+1; ro < BOARD_HEIGHT; ro++) {
 		if (board[ro][column] == EMPTY) { // empty square
 			moves.push_back(pieceMove(row, column, ro, column));
-		} else if (colourLower <= board[ro][column] && board[ro][column] <= colourUpper) { // same colour
+		} else if (myTeam.count(board[ro][column])) { // same colour
 			break;
 		} else { // first enemy encountered on the path
 			moves.push_back(pieceMove(row, column, ro, column));
@@ -52,7 +52,7 @@ std::vector<pieceMove> rookMove::findMoves(int** board, int row, int column, boo
 	for (int ro = row-1; ro >= 0; ro--) {
 		if (board[ro][column] == EMPTY) { // empty square
 			moves.push_back(pieceMove(row, column, ro, column));
-		} else if (colourLower <= board[ro][column] && board[ro][column] <= colourUpper) { // same colour
+		} else if (myTeam.count(board[ro][column])) { // same colour
 			break;
 		} else { // first enemy encountered on the path
 			moves.push_back(pieceMove(row, column, ro, column));
