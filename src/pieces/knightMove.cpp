@@ -2,14 +2,14 @@
 
 std::vector<pieceMove> knightMove::findMoves(int** board, int row, int column, bool colour) {
 	std::vector<pieceMove> moves = std::vector<pieceMove>();
+	std::unordered_set<int> myTeam, enemyTeam;
 
-	int colourLower, colourUpper;
 	if (colour == WHITE) {
-		colourLower = 1;
-		colourUpper = 6;
+		myTeam = WhiteTeam;
+		enemyTeam = BlackTeam;
 	} else {
-		colourLower = 7;
-		colourUpper = 12;
+		myTeam = BlackTeam;
+		enemyTeam = WhiteTeam;
 	}
 
 	// Can physically do the move, and it's not in our team
@@ -19,7 +19,7 @@ std::vector<pieceMove> knightMove::findMoves(int** board, int row, int column, b
 	ro = row - 2;
 	col = column - 1;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+		myTeam.count(board[ro][col]) == 0) { // must not be on the same team
 			moves.push_back(pieceMove(row, column, ro, col));
 	}
 
@@ -27,7 +27,7 @@ std::vector<pieceMove> knightMove::findMoves(int** board, int row, int column, b
 	ro = row - 1;
 	col = column - 2;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+		myTeam.count(board[ro][col]) == 0) { // must not be on the same team
 			moves.push_back(pieceMove(row, column, ro, col));
 	}
 
@@ -35,7 +35,7 @@ std::vector<pieceMove> knightMove::findMoves(int** board, int row, int column, b
 	ro = row - 2;
 	col = column + 1;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+		myTeam.count(board[ro][col]) == 0) { // must not be on the same team
 			moves.push_back(pieceMove(row, column, ro, col));
 	}
 
@@ -43,7 +43,7 @@ std::vector<pieceMove> knightMove::findMoves(int** board, int row, int column, b
 	ro = row - 1;
 	col = column + 2;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+		myTeam.count(board[ro][col]) == 0) { // must not be on the same team
 			moves.push_back(pieceMove(row, column, ro, col));
 	}
 
@@ -51,7 +51,7 @@ std::vector<pieceMove> knightMove::findMoves(int** board, int row, int column, b
 	ro = row + 2;
 	col = column - 1;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+		myTeam.count(board[ro][col]) == 0) { // must not be on the same team
 			moves.push_back(pieceMove(row, column, ro, col));
 	}
 
@@ -59,7 +59,7 @@ std::vector<pieceMove> knightMove::findMoves(int** board, int row, int column, b
 	ro = row + 1;
 	col = column - 2;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+		myTeam.count(board[ro][col]) == 0) { // must not be on the same team
 			moves.push_back(pieceMove(row, column, ro, col));
 	}
 
@@ -67,7 +67,7 @@ std::vector<pieceMove> knightMove::findMoves(int** board, int row, int column, b
 	ro = row + 2;
 	col = column + 1;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+		myTeam.count(board[ro][col]) == 0) { // must not be on the same team
 			moves.push_back(pieceMove(row, column, ro, col));
 	}
 
@@ -75,7 +75,7 @@ std::vector<pieceMove> knightMove::findMoves(int** board, int row, int column, b
 	ro = row + 1;
 	col = column + 2;
 	if (0 <= ro && ro < BOARD_HEIGHT && 0 <= col && col < BOARD_WIDTH && // physically can move
-		! (colourLower <= board[ro][col] && board[ro][col] <= colourUpper)) { // must not be on the same team
+		myTeam.count(board[ro][col]) == 0) { // must not be on the same team
 			moves.push_back(pieceMove(row, column, ro, col));
 	}
 

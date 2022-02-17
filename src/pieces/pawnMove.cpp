@@ -3,7 +3,7 @@
 std::vector<pieceMove> pawnMove::findMoves(int** board, int row, int column, bool colour) {
 	std::vector<pieceMove> moves = std::vector<pieceMove>();
 	std::unordered_set<int> myTeam, enemyTeam;
-	int colourLower, colourUpper;
+	
 	if (colour == WHITE) {
 		myTeam = WhiteTeam;
 		enemyTeam = BlackTeam;
