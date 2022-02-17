@@ -2,14 +2,14 @@
 
 std::vector<pieceMove> bishopMove::findMoves(int** board, int row, int column, bool colour) {
 	std::vector<pieceMove> moves = std::vector<pieceMove>();
+	std::unordered_set<int> myTeam, enemyTeam;
 
-	int colourLower, colourUpper;
 	if (colour == WHITE) {
-		colourLower = 1;
-		colourUpper = 6;
+		myTeam = WhiteTeam;
+		enemyTeam = BlackTeam;
 	} else {
-		colourLower = 7;
-		colourUpper = 12;
+		myTeam = BlackTeam;
+		enemyTeam = WhiteTeam;
 	}
 
 	int ro, col;
@@ -21,7 +21,7 @@ std::vector<pieceMove> bishopMove::findMoves(int** board, int row, int column, b
 	while (ro >= 0 && col < BOARD_WIDTH) {
 		if (board[ro][col] == EMPTY) { // empty square
 			moves.push_back(pieceMove(row, column, ro, col));
-		} else if (colourLower <= board[ro][col] && board[ro][col] <= colourUpper) { // same colour
+		} else if (myTeam.count(board[ro][col])) { // same colour
 			break;
 		} else { // first enemy encountered on the path
 			moves.push_back(pieceMove(row, column, ro, col));
@@ -38,7 +38,7 @@ std::vector<pieceMove> bishopMove::findMoves(int** board, int row, int column, b
 	while (ro < BOARD_HEIGHT && col >= 0) {
 		if (board[ro][col] == EMPTY) { // empty square
 			moves.push_back(pieceMove(row, column, ro, col));
-		} else if (colourLower <= board[ro][col] && board[ro][col] <= colourUpper) { // same colour
+		} else if (myTeam.count(board[ro][col])) { // same colour
 			break;
 		} else { // first enemy encountered on the path
 			moves.push_back(pieceMove(row, column, ro, col));
@@ -55,7 +55,7 @@ std::vector<pieceMove> bishopMove::findMoves(int** board, int row, int column, b
 	while (ro >= 0 && col >= 0) {
 		if (board[ro][col] == EMPTY) { // empty square
 			moves.push_back(pieceMove(row, column, ro, col));
-		} else if (colourLower <= board[ro][col] && board[ro][col] <= colourUpper) { // same colour
+		} else if (myTeam.count(board[ro][col])) { // same colour
 			break;
 		} else { // first enemy encountered on the path
 			moves.push_back(pieceMove(row, column, ro, col));
@@ -72,7 +72,7 @@ std::vector<pieceMove> bishopMove::findMoves(int** board, int row, int column, b
 	while (ro < BOARD_HEIGHT && col < BOARD_WIDTH) {
 		if (board[ro][col] == EMPTY) { // empty square
 			moves.push_back(pieceMove(row, column, ro, col));
-		} else if (colourLower <= board[ro][col] && board[ro][col] <= colourUpper) { // same colour
+		} else if (myTeam.count(board[ro][col])) { // same colour
 			break;
 		} else { // first enemy encountered on the path
 			moves.push_back(pieceMove(row, column, ro, col));
