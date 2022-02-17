@@ -36,4 +36,8 @@ once it's instantiated
 The only time it's not is in get_moves(), as we only need
 the board->pos; this also avoid infinite recursion
 
+turn here means if it's white or black's turn to move
+This is different from usersTurn from GameState, which denotes
+if it's the user's or AI's turn
+
 */

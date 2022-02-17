@@ -40,8 +40,12 @@ int main(int argc,char *argv[]){
     return 0;
 }
 
-/* Line 33, 34
+/* 
+
+Line 33, 34
 visualise the last move that led to
 the status != CONTINUE
 only when status != QUIT because either nothing to vis
-or already visualised (midgame) */
+or already visualised (midgame) 
+
+*/

@@ -55,7 +55,7 @@ Move getOptimalMove(Board* board, bool colour) {
 	return best.move;
 }
 
-MoveEval minimax(Board* board, int depth, int alpha, int beta, bool colour) { // colour???? also turn same as gamestate
+MoveEval minimax(Board* board, int depth, int alpha, int beta, bool colour) {
 	// Game over, colour is being checked and has no moves
 	if (board->moves.size() == 0 && board->checked(colour)) {
 		if (colour == WHITE) return MoveEval{ Move{}, numeric_limits<int>::min() + 1 };
