@@ -6,7 +6,6 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include "forall.h"
-using namespace std;
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 640;

@@ -3,19 +3,25 @@
 #define BOARD_H
 
 #include <iostream>
-#include "moves.h"
+#include "pieces/pieceMove.h"
+#include "pieces/pawnMove.h"
+#include "pieces/knightMove.h"
+#include "pieces/rookMove.h"
+#include "pieces/bishopMove.h"
+#include "pieces/queenMove.h"
+#include "pieces/kingMove.h"
 
 class Board {
 	public:
 		int** pos;
 		bool turn;
-		std::vector<Move> moves;
+		std::vector<pieceMove> moves;
 
 		Board();
 		Board(int** paramPos);
 		~Board();
-		Board* make_move(Move move, bool getMoves);
-		bool check_move(Move tryMove);
+		Board* make_move(pieceMove move, bool getMoves);
+		bool check_move(pieceMove tryMove);
 		bool checked(bool colour);
 		int gameOver();
 	private:

@@ -9,6 +9,7 @@
 #include "minimax.h"
 #include "visualise.h"
 #include "forall.h"
+#include "pieces/pieceMove.h"
 
 class GameState {
 	public:
@@ -23,7 +24,7 @@ class GameState {
 		void printHistory();
 	private:
 		Board* board;
-		std::vector<string> history;
+		std::vector<std::string> history;
 
 		void status_check();
 		int selectPlayer();

@@ -9,23 +9,23 @@ SDL_Surface** gPieceSurfaces = NULL;
 bool init_SDL()
 {
 	if(SDL_Init( SDL_INIT_VIDEO ) < 0) {
-		cout << "SDL could not initialize" << endl;
-		cout << "Reason: " << SDL_GetError() << endl;
+		std::cout << "SDL could not initialize" << std::endl;
+		std::cout << "Reason: " << SDL_GetError() << std::endl;
 		return 0;
 	}
 	
 	gWindow = SDL_CreateWindow( "chess", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
 	if(gWindow == NULL) {
-		cout << "Window could not be created" << endl; 
-		cout << "Reason: " << SDL_GetError() << endl;
+		std::cout << "Window could not be created" << std::endl; 
+		std::cout << "Reason: " << SDL_GetError() << std::endl;
 		return 0;
 	}
 
 	int flags = IMG_INIT_JPG | IMG_INIT_PNG;
     int initted=IMG_Init(flags);
     if( initted & flags != flags) {
-        cout << "Could not init SDL_Image" << endl;
-        cout << "Reason: " << IMG_GetError() << endl;
+        std::cout << "Could not init SDL_Image" << std::endl;
+        std::cout << "Reason: " << IMG_GetError() << std::endl;
         return 0;
     }
 
@@ -43,7 +43,7 @@ bool loadMedia(bool colour)
 	}
 
     if (gBoardSurface == NULL) {
-        cout << "Could not load board img" << endl;
+        std::cout << "Could not load board img" << std::endl;
         return 0;
     }
 
@@ -51,74 +51,74 @@ bool loadMedia(bool colour)
 
     gPieceSurfaces[wPawn] = IMG_Load("../img/wPawn.png");
     if (gPieceSurfaces[wPawn] == NULL) {
-        cout << "Could not load white pawn img" << endl;
+        std::cout << "Could not load white pawn img" << std::endl;
         return 0;
     }
 
     gPieceSurfaces[wKnight] = IMG_Load("../img/wKnight.png");
     if (gPieceSurfaces[wKnight] == NULL) {
-        cout << "Could not load white knight img" << endl;
+        std::cout << "Could not load white knight img" << std::endl;
         return 0;
     }
 
 	gPieceSurfaces[wBishop] = IMG_Load("../img/wBishop.png");
     if (gPieceSurfaces[wBishop] == NULL) {
-        cout << "Could not load white bishop img" << endl;
+        std::cout << "Could not load white bishop img" << std::endl;
         return 0;
     }
 
     gPieceSurfaces[wRook] = IMG_Load("../img/wRook.png");
     if (gPieceSurfaces[wRook] == NULL) {
-        cout << "Could not load white rook img" << endl;
+        std::cout << "Could not load white rook img" << std::endl;
         return 0;
     }
 
     gPieceSurfaces[wQueen] = IMG_Load("../img/wQueen.png");
     if (gPieceSurfaces[wQueen] == NULL) {
-        cout << "Could not load white queen img" << endl;
+        std::cout << "Could not load white queen img" << std::endl;
         return 0;
     }
 
     gPieceSurfaces[wKing] = IMG_Load("../img/wKing.png");
     if (gPieceSurfaces[wKing] == NULL) {
-        cout << "Could not load white king img" << endl;
+        std::cout << "Could not load white king img" << std::endl;
         return 0;
     }
 
 
     gPieceSurfaces[bPawn] = IMG_Load("../img/bPawn.png");
     if (gPieceSurfaces[bPawn] == NULL) {
-        cout << "Could not load black pawn img" << endl;
+        std::cout << "Could not load black pawn img" << std::endl;
         return 0;
     }
 
     gPieceSurfaces[bKnight] = IMG_Load("../img/bKnight.png");
     if (gPieceSurfaces[bKnight] == NULL) {
-        cout << "Could not load black knight img" << endl;
+        std::cout << "Could not load black knight img" << std::endl;
         return 0;
     }
 
 	gPieceSurfaces[bBishop] = IMG_Load("../img/bBishop.png");
     if (gPieceSurfaces[bBishop] == NULL) {
-        cout << "Could not load black bishop img" << endl;
+        std::cout << "Could not load black bishop img" << std::endl;
         return 0;
     }
 
     gPieceSurfaces[bRook] = IMG_Load("../img/bRook.png");
     if (gPieceSurfaces[bRook] == NULL) {
-        cout << "Could not load black rook img" << endl;
+        std::cout << "Could not load black rook img" << std::endl;
         return 0;
     }
 
     gPieceSurfaces[bQueen] = IMG_Load("../img/bQueen.png");
     if (gPieceSurfaces[bQueen] == NULL) {
-        cout << "Could not load black queen img" << endl;
+        std::cout << "Could not load black queen img" << std::endl;
         return 0;
     }
 
     gPieceSurfaces[bKing] = IMG_Load("../img/bKing.png");
     if (gPieceSurfaces[bKing] == NULL) {
-        cout << "Could not load black king img" << endl;
+        std::cout << "Could not load black king img" << std::endl;
         return 0;
     }
 
@@ -145,7 +145,7 @@ void close_visualise()
 
 bool visBoard(int **board, bool colour) {
 	if (SDL_BlitSurface(gBoardSurface, NULL, gScreenSurface, NULL) == -1) {
-        cout << "Error while blitting the board" << endl;
+        std::cout << "Error while blitting the board" << std::endl;
         return 0;
     }
 
@@ -160,7 +160,7 @@ bool visBoard(int **board, bool colour) {
     				dstrect.h = 75;
         			
         			if (SDL_BlitSurface(gPieceSurfaces[board[row][column]], NULL, gScreenSurface, &dstrect) == -1 ){
-            			cout << "Error while blitting piece" << endl;
+            			std::cout << "Error while blitting piece" << std::endl;
             			return 0;
         			}		
         		}
@@ -176,7 +176,7 @@ bool visBoard(int **board, bool colour) {
     				dstrect.h = 75;
         			
         			if (SDL_BlitSurface(gPieceSurfaces[board[row][column]], NULL, gScreenSurface, &dstrect) == -1 ){
-            			cout << "Error while blitting piece" << endl;
+            			std::cout << "Error while blitting piece" << std::endl;
             			return 0;
         			}		
         		}

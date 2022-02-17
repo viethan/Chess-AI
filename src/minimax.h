@@ -7,7 +7,7 @@
 #include <limits>
 #include "forall.h"
 #include "Board.h"
-using namespace std;
+#include "pieces/pieceMove.h"
 
 /*
 
@@ -25,7 +25,7 @@ Potential Improvements:
 
 const int MAX_DEPTH = 4; // must be >= 1
 struct MoveEval {
-	Move move;
+	pieceMove move;
 	int score;
 };
 
@@ -103,7 +103,7 @@ const int pawnTable[8][8] = {
 };
 
 int eval(int **board);
-Move getOptimalMove(Board* board, bool colour);
+pieceMove getOptimalMove(Board* board, bool colour);
 MoveEval minimax(Board* board, int depth, int alpha, int beta, bool colour);
 
 #endif

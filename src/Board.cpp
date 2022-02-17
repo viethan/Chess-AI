@@ -54,7 +54,7 @@ Board::~Board() {
 // creates a new Board obj with the updated positions
 // also makes sure to NOT the turn
 // get_moves() only if needed
-Board* Board::make_move(Move move, bool getMoves) {
+Board* Board::make_move(pieceMove move, bool getMoves) {
 	Board* newBoard = new Board(this->pos);
 	newBoard->pos[move.destRow][move.destCol] = newBoard->pos[move.srcRow][move.srcCol]; 
 	newBoard->pos[move.srcRow][move.srcCol] = EMPTY;
@@ -74,8 +74,8 @@ void Board::get_moves() {
 		colourUpper = 12;
 	}
 
-	this->moves = std::vector<Move>();
-	std::vector<Move> piece_moves;
+	this->moves = std::vector<pieceMove>();
+	std::vector<pieceMove> piece_moves;
 	for (int row = 0; row < BOARD_HEIGHT; row++) {
 		for (int column = 0; column < BOARD_WIDTH; column++) {
 			if (colourLower <= this->pos[row][column] && this->pos[row][column] <= colourUpper) {
@@ -83,27 +83,27 @@ void Board::get_moves() {
 				switch (this->pos[row][column]) {
 					case wPawn:
 					case bPawn:
-						piece_moves = pawnMove(this->pos, row, column, this->turn); 
+						piece_moves = pawnMove::findMoves(this->pos, row, column, this->turn); 
 						break;
 					case wKnight:
 					case bKnight:
-						piece_moves = knightMove(this->pos, row, column, this->turn);
+						piece_moves = knightMove::findMoves(this->pos, row, column, this->turn);
 						break;
 					case wBishop:
 					case bBishop:
-						piece_moves = bishopMove(this->pos, row, column, this->turn);
+						piece_moves = bishopMove::findMoves(this->pos, row, column, this->turn);
 						break;
 					case wRook:
 					case bRook:
-						piece_moves = rookMove(this->pos, row, column, this->turn);
+						piece_moves = rookMove::findMoves(this->pos, row, column, this->turn);
 						break;
 					case wQueen:
 					case bQueen:
-						piece_moves = queenMove(this->pos, row, column, this->turn);
+						piece_moves = queenMove::findMoves(this->pos, row, column, this->turn);
 						break;
 					case wKing:
 					case bKing:
-						piece_moves = kingMove(this->pos, row, column, this->turn);
+						piece_moves = kingMove::findMoves(this->pos, row, column, this->turn);
 				}
 
 				this->moves.insert(this->moves.end(), piece_moves.begin(), piece_moves.end());
@@ -113,8 +113,8 @@ void Board::get_moves() {
 	}
 
 	Board* tempBoard;
-	for (vector<Move>::iterator it = this->moves.begin(); it != this->moves.end();) {
-		tempBoard = make_move(Move{it->srcRow, it->srcCol, it->destRow, it->destCol}, false);
+	for (std::vector<pieceMove>::iterator it = this->moves.begin(); it != this->moves.end();) {
+		tempBoard = make_move(pieceMove(it->srcRow, it->srcCol, it->destRow, it->destCol), false);
 		if (tempBoard->checked(this->turn)) {
 			this->moves.erase(it);
 		} else {
@@ -127,8 +127,8 @@ void Board::get_moves() {
 
 // see if the move the user tries to play
 // is in the moves vector
-bool Board::check_move(Move tryMove) {
-	for (vector<Move>::iterator it = this->moves.begin(); it != this->moves.end(); it++) {
+bool Board::check_move(pieceMove tryMove) {
+	for (std::vector<pieceMove>::iterator it = this->moves.begin(); it != this->moves.end(); it++) {
 		if (it->srcRow == tryMove.srcRow &&
 			it->srcCol == tryMove.srcCol &&
 			it->destRow == tryMove.destRow &&
@@ -443,16 +443,10 @@ int Board::gameOver() {
 	return CONTINUE; 
 }
 
+/*
 
-	// We have to make sure that our king is not accidentally checked
-	// self-inflicting discovered attack
-	// also helps if the king was checked to begin with
-	// cout << "getMoves calling checked()" << endl;
-	// cout << "Before: " << moves.size() << endl;
-	// for (int i = 0; i < moves.size(); ++i) {
- //        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
- //    }
-		// cout << "After: " << moves.size() << endl;
-	// for (int i = 0; i < moves.size(); ++i) {
- //        cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << endl;
- //    }
+for (int i = 0; i < moves.size(); ++i) {
+        std::cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << std::endl;
+    }
+
+*/

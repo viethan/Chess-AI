@@ -10,7 +10,7 @@ GameState::GameState() {
     if (this->status == CONTINUE) {    
         if (this->userColour == WHITE) this->usersTurn = true;
         else this->usersTurn = false;
-        this->history = vector<string>();
+        this->history = std::vector<std::string>();
         this->board = init_main(this->userColour); // colour to rotate board or not
         if (this->board == NULL) this->status = QUIT;
     }
@@ -26,12 +26,12 @@ GameState::~GameState() {
 
 int GameState::selectPlayer() {
     bool player;
-    string input;
+    std::string input;
     
     while(true) {
-        cout << "Enter 0 for White, 1 for Black, 2 for Random" << endl;
-        cout << "Type quit in order to exit" << endl;
-        cin >> input;
+        std::cout << "Enter 0 for White, 1 for Black, 2 for Random" << std::endl;
+        std::cout << "Type quit in order to exit" << std::endl;
+        std::cin >> input;
         
         if (input.compare("quit") == 0) { 
             this->status = QUIT;
@@ -54,8 +54,8 @@ int GameState::selectPlayer() {
         }  
     }
 
-    if (player == WHITE) cout << "You are white" << endl;
-    else cout << "You are black" << endl;
+    if (player == WHITE) std::cout << "You are white" << std::endl;
+    else std::cout << "You are black" << std::endl;
     return player;
 }
 
@@ -64,19 +64,19 @@ void GameState::visualise() {
 }
 
 void GameState::userMoves() {
-    string input;
-    Move userMove;
+    std::string input;
+    pieceMove userMove;
     
     while (true) {
-        cout << "Your next move: " << endl;
-        cin >> input;
+        std::cout << "Your next move: " << std::endl;
+        std::cin >> input;
 
         if (input.compare("quit") == 0) { 
             this->status = QUIT;
             return;
         }
 
-        if (string2move(input, &userMove) && 
+        if (pieceMove::string2move(input, &userMove) && 
             this->board->check_move(userMove)) {
                 if (this->userColour == WHITE) this->history.push_back("White " + input);    
                 else this->history.push_back("Black " + input);
@@ -88,7 +88,7 @@ void GameState::userMoves() {
                 break;
         }
 
-        cout << "bad input" << endl;
+        std::cout << "bad input" << std::endl;
     }
 
     this->usersTurn = false;
@@ -96,9 +96,9 @@ void GameState::userMoves() {
 }
 
 void GameState::AIMoves() {
-    Move AIMove = getOptimalMove(this->board, !this->userColour);
-    string srcCol(1, 'a' + AIMove.srcCol), destCol(1, 'a' + AIMove.destCol);
-    string srcRow(1, '1' + (7-AIMove.srcRow)), destRow(1, '1' + (7-AIMove.destRow));
+    pieceMove AIMove = getOptimalMove(this->board, !this->userColour);
+    std::string srcCol(1, 'a' + AIMove.srcCol), destCol(1, 'a' + AIMove.destCol);
+    std::string srcRow(1, '1' + (7-AIMove.srcRow)), destRow(1, '1' + (7-AIMove.destRow));
     
     if (!(this->userColour) == WHITE)
         this->history.push_back("White " + srcCol + srcRow + destCol + destRow);    
@@ -115,9 +115,9 @@ void GameState::AIMoves() {
 }
 
 void GameState::printHistory() {
-    cout << "\033[2J\033[1;1H"; // clears the screen
-    for (vector<string>::iterator it = history.begin(); it != history.end(); it++) {
-        cout << *it << endl;
+    std::cout << "\033[2J\033[1;1H"; // clears the screen
+    for (std::vector<std::string>::iterator it = history.begin(); it != history.end(); it++) {
+        std::cout << *it << std::endl;
     }
 }
 
@@ -146,12 +146,12 @@ void GameState::status_check() {
 Board* init_main(bool colour) { 
     if (SDL_WasInit(SDL_INIT_EVERYTHING)) close_visualise();
     if (!init_SDL()) {
-        cout << "Failed to initialize SDL" << endl;
+        std::cout << "Failed to initialize SDL" << std::endl;
         return NULL;
     }
 
     if (!loadMedia(colour)) {
-        cout << "Failed to load media" << endl;
+        std::cout << "Failed to load media" << std::endl;
         return NULL;
     }
 

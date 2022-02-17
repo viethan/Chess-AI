@@ -50,27 +50,27 @@ int eval(int **board) {
 	return score;
 }
 
-Move getOptimalMove(Board* board, bool colour) {
-	MoveEval best = minimax(board, MAX_DEPTH, numeric_limits<int>::min(), numeric_limits<int>::max(), colour);
+pieceMove getOptimalMove(Board* board, bool colour) {
+	MoveEval best = minimax(board, MAX_DEPTH, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), colour);
 	return best.move;
 }
 
 MoveEval minimax(Board* board, int depth, int alpha, int beta, bool colour) {
 	// Game over, colour is being checked and has no moves
 	if (board->moves.size() == 0 && board->checked(colour)) {
-		if (colour == WHITE) return MoveEval{ Move{}, numeric_limits<int>::min() + 1 };
-		else  return MoveEval{ Move{}, numeric_limits<int>::max() - 1 };
+		if (colour == WHITE) return MoveEval{ pieceMove(), std::numeric_limits<int>::min() + 1 };
+		else  return MoveEval{ pieceMove(), std::numeric_limits<int>::max() - 1 };
 	}
 
 	// Stalemate will call eval() as usual
 	if (depth == 0 || board->moves.size() == 0) 
-		return MoveEval{ Move{}, eval(board->pos) };	  
+		return MoveEval{ pieceMove(), eval(board->pos) };	  
 
 	MoveEval eval, compareEval = MoveEval{}; 
-	if (colour == WHITE) compareEval.score = numeric_limits<int>::min(); // maximizing
-	else if (colour == BLACK) compareEval.score = numeric_limits<int>::max(); // minimizing
+	if (colour == WHITE) compareEval.score = std::numeric_limits<int>::min(); // maximizing
+	else if (colour == BLACK) compareEval.score = std::numeric_limits<int>::max(); // minimizing
 
-	for (vector<Move>::iterator it = board->moves.begin(); it != board->moves.end(); it++) {
+	for (std::vector<pieceMove>::iterator it = board->moves.begin(); it != board->moves.end(); it++) {
 			Board* nextBoard = board->make_move(*it, true);
 			eval = minimax(nextBoard, depth-1, alpha, beta, !colour);
 			if ((colour == WHITE && eval.score > compareEval.score) || 
@@ -78,10 +78,10 @@ MoveEval minimax(Board* board, int depth, int alpha, int beta, bool colour) {
 				compareEval = MoveEval{*it, eval.score};
 
 			delete nextBoard;
-			if (colour == WHITE) alpha = max(alpha, eval.score);
-			else beta = min(beta, eval.score);
+			if (colour == WHITE) alpha = std::max(alpha, eval.score);
+			else beta = std::min(beta, eval.score);
 			if (beta <= alpha) break;
 	}
-	cout << compareEval.score << endl;
+	std::cout << compareEval.score << std::endl;
 	return compareEval;
 }
