@@ -12,6 +12,7 @@ class pieceMove {
 		bool castlingMove;
 
 		pieceMove();
+		pieceMove(const pieceMove &obj);
 		pieceMove(int srcRow, int srcCol, int destRow, int destCol);
 		pieceMove(int srcRow, int srcCol, int destRow, int destCol, bool castlingMove);
 		static bool string2move(std::string input, pieceMove* target, bool colour);		

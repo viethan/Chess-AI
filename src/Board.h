@@ -16,9 +16,11 @@ class Board {
 		int** pos;
 		bool turn;
 		std::vector<pieceMove> moves;
+		// for en passant
+		pieceMove prev;
 
 		Board();
-		Board(int** paramPos, bool turn,
+		Board(int** paramPos, bool turn, pieceMove prev,
 			bool wKingMoved, bool wLRookMoved, bool wRRookMoved,
 			bool bKingMoved, bool bLRookMoved, bool bRRookMoved);
 		~Board();

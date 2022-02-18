@@ -35,7 +35,7 @@ Board::Board() {
 	this->get_moves();
 }
 
-Board::Board(int** paramPos, bool turn,
+Board::Board(int** paramPos, bool turn, pieceMove prev,
 			bool wKingMoved, bool wLRookMoved, bool wRRookMoved,
 			bool bKingMoved, bool bLRookMoved, bool bRRookMoved) {
 	
@@ -51,6 +51,7 @@ Board::Board(int** paramPos, bool turn,
 	}
 
 	this->turn = turn;
+	this->prev = prev;
 	this->wKingMoved = wKingMoved;
 	this->wLRookMoved = wLRookMoved;
 	this->wRRookMoved = wRRookMoved;
@@ -70,7 +71,7 @@ Board::~Board() {
 // also makes sure to NOT the turn
 // get_moves() only if needed
 Board* Board::make_move(pieceMove move, bool getMoves) {
-	Board* newBoard = new Board(this->pos, !this->turn, 
+	Board* newBoard = new Board(this->pos, !this->turn, move, 
 		this->wKingMoved, this->wLRookMoved, this->wRRookMoved,
 		this->bKingMoved, this->bLRookMoved, this->bRRookMoved);
 
@@ -113,40 +114,6 @@ Board* Board::make_move(pieceMove move, bool getMoves) {
 
 	if (getMoves) newBoard->get_moves();
 	return newBoard;
-}
-
-bool Board::wKingsideCastle() {
-	if (this->checked(WHITE) ||
-		!(this->pos[7][5] == EMPTY) ||
-		!(this->pos[7][6] == EMPTY))
-		return false;
-	return true;
-}
-
-bool Board::wQueensideCastle() {
-	if (this->checked(WHITE) ||
-		!(this->pos[7][1] == EMPTY) ||
-		!(this->pos[7][2] == EMPTY) ||
-		!(this->pos[7][3] == EMPTY))
-		return false;
-	return true;
-}
-
-bool Board::bKingsideCastle() {
-	if (this->checked(BLACK) ||
-		!(this->pos[0][5] == EMPTY) ||
-		!(this->pos[0][6] == EMPTY))
-		return false;
-	return true;
-}
-
-bool Board::bQueensideCastle() {
-	if (this->checked(BLACK) ||
-		!(this->pos[0][1] == EMPTY) ||
-		!(this->pos[0][2] == EMPTY) ||
-		!(this->pos[0][3] == EMPTY))
-		return false;
-	return true;
 }
 
 void Board::get_moves() {
@@ -222,7 +189,7 @@ void Board::get_moves() {
 // see if the move the user tries to play
 // is in the moves vector
 bool Board::check_move(pieceMove tryMove) {
-	// std::cout << "trying this move: " << "srcRow: " << tryMove.srcRow << "; srcCol: " << tryMove.srcCol << " destRow: " << 7-tryMove.destRow << "; destCol: " << tryMove.destCol << "; castlingMove: " << tryMove.castlingMove << std::endl;
+	// std::cout << "trying this move: " << "srcRow: " << 7-tryMove.srcRow << "; srcCol: " << tryMove.srcCol << " destRow: " << 7-tryMove.destRow << "; destCol: " << tryMove.destCol << "; castlingMove: " << tryMove.castlingMove << std::endl;
 	// std::cout << "your available moves: " << std::endl;
 	// for (int i = 0; i < moves.size(); ++i) {
  //        std::cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << "; castlingMove: " << moves.at(i).castlingMove << std::endl;
@@ -542,6 +509,40 @@ int Board::gameOver() {
 	}
 
 	return CONTINUE; 
+}
+
+bool Board::wKingsideCastle() {
+	if (this->checked(WHITE) ||
+		!(this->pos[7][5] == EMPTY) ||
+		!(this->pos[7][6] == EMPTY))
+		return false;
+	return true;
+}
+
+bool Board::wQueensideCastle() {
+	if (this->checked(WHITE) ||
+		!(this->pos[7][1] == EMPTY) ||
+		!(this->pos[7][2] == EMPTY) ||
+		!(this->pos[7][3] == EMPTY))
+		return false;
+	return true;
+}
+
+bool Board::bKingsideCastle() {
+	if (this->checked(BLACK) ||
+		!(this->pos[0][5] == EMPTY) ||
+		!(this->pos[0][6] == EMPTY))
+		return false;
+	return true;
+}
+
+bool Board::bQueensideCastle() {
+	if (this->checked(BLACK) ||
+		!(this->pos[0][1] == EMPTY) ||
+		!(this->pos[0][2] == EMPTY) ||
+		!(this->pos[0][3] == EMPTY))
+		return false;
+	return true;
 }
 
 /*

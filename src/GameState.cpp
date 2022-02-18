@@ -70,7 +70,7 @@ void GameState::userMoves() {
     while (true) {
         std::cout << "Your next move: " << std::endl;
         std::getline(std::cin, input);
-        
+
         if (input.compare("quit") == 0) { 
             this->status = QUIT;
             return;

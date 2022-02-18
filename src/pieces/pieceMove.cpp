@@ -25,6 +25,14 @@ pieceMove::pieceMove(int srcRow, int srcCol, int destRow, int destCol, bool cast
 	this->castlingMove = true;
 }
 
+pieceMove::pieceMove(const pieceMove &obj) {
+	this->srcRow = obj.srcRow;
+	this->srcCol = obj.srcCol;
+	this->destRow = obj.destRow;
+	this->destCol = obj.destCol;
+	this->castlingMove = obj.castlingMove;
+}
+
 bool pieceMove::string2move(std::string input, pieceMove* target, bool colour) {
 	if (input.compare("kingside castle") == 0) {
 		target->castlingMove = true;
