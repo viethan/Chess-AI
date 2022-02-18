@@ -6,16 +6,16 @@ Board::Board() {
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		switch (i) {
 			case 0:
-				//this->pos[i] = new int[BOARD_WIDTH]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
-				this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, bKing};
+				this->pos[i] = new int[BOARD_WIDTH]{bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook};
+				//this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, bKing};
 				break;
 			case 1:
-				//this->pos[i] = new int[BOARD_WIDTH]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
-				this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
+				this->pos[i] = new int[BOARD_WIDTH]{bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn};
+				//this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
 				break;
 			case 6:
-				//this->pos[i] = new int[BOARD_WIDTH]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
-				this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
+				this->pos[i] = new int[BOARD_WIDTH]{wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn};
+				//this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY};
 				break;
 			case 7:
 				this->pos[i] = new int[BOARD_WIDTH]{wRook, wKnight, wBishop, wQueen, wKing, wBishop, wKnight, wRook};
@@ -26,13 +26,24 @@ Board::Board() {
 	}
 
 	this->turn = WHITE;
+	this->wKingMoved = false;
+	this->wLRookMoved = false;
+	this->wRRookMoved = false;
+	this->bKingMoved = false;
+	this->bLRookMoved = false;
+	this->bRRookMoved = false;
+	std::cout << "new board " << this->wKingMoved << this->wLRookMoved << this->wRRookMoved << std::endl;
+	std::cout << this->bKingMoved << this->bLRookMoved << this->bRRookMoved << std::endl;
 	this->get_moves();
+	std::cout << "after get_moves() " << this->wKingMoved << this->wLRookMoved << this->wRRookMoved << std::endl;
+	std::cout << this->bKingMoved << this->bLRookMoved << this->bRRookMoved << std::endl;
 }
 
-// just pos
-Board::Board(int** paramPos) {
+Board::Board(int** paramPos, bool turn,
+			bool wKingMoved, bool wLRookMoved, bool wRRookMoved,
+			bool bKingMoved, bool bLRookMoved, bool bRRookMoved) {
+	
 	this->pos = new int*[BOARD_HEIGHT];
-
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		this->pos[i] = new int[BOARD_WIDTH];
 	}
@@ -42,6 +53,14 @@ Board::Board(int** paramPos) {
 			this->pos[row][column] = paramPos[row][column];
 		}
 	}
+
+	this->turn = turn;
+	this->wKingMoved = wKingMoved;
+	this->wLRookMoved = wLRookMoved;
+	this->wRRookMoved = wRRookMoved;
+	this->bKingMoved = bKingMoved;
+	this->bLRookMoved = bLRookMoved;
+	this->bRRookMoved = bRRookMoved;
 }
 
 Board::~Board() {
@@ -55,30 +74,40 @@ Board::~Board() {
 // also makes sure to NOT the turn
 // get_moves() only if needed
 Board* Board::make_move(pieceMove move, bool getMoves) {
-	Board* newBoard = new Board(this->pos);
+	Board* newBoard = new Board(this->pos, !this->turn, 
+		this->wKingMoved, this->wLRookMoved, this->wRRookMoved,
+		this->bKingMoved, this->bLRookMoved, this->bRRookMoved);
 	newBoard->pos[move.destRow][move.destCol] = newBoard->pos[move.srcRow][move.srcCol]; 
 	newBoard->pos[move.srcRow][move.srcCol] = EMPTY;
-	newBoard->turn = !this->turn;
+
+	// for castling
+	if(move.srcRow == 7 && move.srcCol == 4) newBoard->wKingMoved = true;
+	if(move.srcRow == 7 && move.srcCol == 0) newBoard->wLRookMoved = true;
+	if(move.srcRow == 7 && move.srcCol == 7) newBoard->wRRookMoved = true;
+	if(move.srcRow == 0 && move.srcCol == 4) newBoard->bKingMoved = true;
+	if(move.srcRow == 0 && move.srcCol == 0) newBoard->bLRookMoved = true;
+	if(move.srcRow == 0 && move.srcCol == 7) newBoard->bRRookMoved = true;
+
 	if (getMoves) newBoard->get_moves();
 
 	return newBoard;
 }
 
 void Board::get_moves() {
-	int colourLower, colourUpper;
+	std::unordered_set<int> myTeam, enemyTeam;
 	if (this->turn == WHITE) {
-		colourLower = 1;
-		colourUpper = 6;
+		myTeam = WhiteTeam;
+		enemyTeam = BlackTeam;
 	} else {
-		colourLower = 7;
-		colourUpper = 12;
+		myTeam = BlackTeam;
+		enemyTeam = WhiteTeam;
 	}
 
 	this->moves = std::vector<pieceMove>();
 	std::vector<pieceMove> piece_moves;
 	for (int row = 0; row < BOARD_HEIGHT; row++) {
 		for (int column = 0; column < BOARD_WIDTH; column++) {
-			if (colourLower <= this->pos[row][column] && this->pos[row][column] <= colourUpper) {
+			if (myTeam.count(this->pos[row][column])) {
 				piece_moves.clear();
 				switch (this->pos[row][column]) {
 					case wPawn:
@@ -113,6 +142,7 @@ void Board::get_moves() {
 	}
 
 	Board* tempBoard;
+	int j = 0;
 	for (std::vector<pieceMove>::iterator it = this->moves.begin(); it != this->moves.end();) {
 		tempBoard = make_move(pieceMove(it->srcRow, it->srcCol, it->destRow, it->destCol), false);
 		if (tempBoard->checked(this->turn)) {
@@ -123,15 +153,13 @@ void Board::get_moves() {
 
 		delete tempBoard;
     }
-
-    for (int i = 0; i < moves.size(); ++i) {
-        std::cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << std::endl;
-    }
 }
 
 // see if the move the user tries to play
 // is in the moves vector
 bool Board::check_move(pieceMove tryMove) {
+	std::cout << this->wKingMoved << this->wLRookMoved << this->wRRookMoved << std::endl;
+	std::cout << this->bKingMoved << this->bLRookMoved << this->bRRookMoved << std::endl << std::endl;
 	for (std::vector<pieceMove>::iterator it = this->moves.begin(); it != this->moves.end(); it++) {
 		if (it->srcRow == tryMove.srcRow &&
 			it->srcCol == tryMove.srcCol &&

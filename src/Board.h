@@ -18,13 +18,19 @@ class Board {
 		std::vector<pieceMove> moves;
 
 		Board();
-		Board(int** paramPos);
+		Board(int** paramPos, bool turn,
+			bool wKingMoved, bool wLRookMoved, bool wRRookMoved,
+			bool bKingMoved, bool bLRookMoved, bool bRRookMoved);
 		~Board();
 		Board* make_move(pieceMove move, bool getMoves);
 		bool check_move(pieceMove tryMove);
 		bool checked(bool colour);
 		int gameOver();
 	private:
+		// for castling
+		bool wKingMoved, wLRookMoved, wRRookMoved;
+		bool bKingMoved, bLRookMoved, bRRookMoved;
+
 		void get_moves();
 		bool checked_knights(int kingRow, int kingColumn, bool colour);
 		bool checked_pawns(int kingRow, int kingColumn, bool colour);
