@@ -76,7 +76,7 @@ void GameState::userMoves() {
             return;
         }
 
-        if (pieceMove::string2move(input, &userMove, this->userColour) && 
+        if (pieceMove::string2move(input, &userMove, this->userColour, this->board->pos) && 
             this->board->check_move(userMove)) {
                 if (this->userColour == WHITE) this->history.push_back("White " + input);    
                 else this->history.push_back("Black " + input);

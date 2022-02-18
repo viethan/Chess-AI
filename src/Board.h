@@ -16,8 +16,6 @@ class Board {
 		int** pos;
 		bool turn;
 		std::vector<pieceMove> moves;
-		// for en passant
-		pieceMove prev;
 
 		Board();
 		Board(int** paramPos, bool turn, pieceMove prev,
@@ -32,7 +30,9 @@ class Board {
 		// for castling
 		bool wKingMoved, wLRookMoved, wRRookMoved;
 		bool bKingMoved, bLRookMoved, bRRookMoved;
-
+		// for en passant
+		pieceMove prev;
+		
 		void get_moves();
 		bool checked_knights(int kingRow, int kingColumn, bool colour);
 		bool checked_pawns(int kingRow, int kingColumn, bool colour);

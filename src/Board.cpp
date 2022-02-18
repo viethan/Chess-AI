@@ -21,7 +21,7 @@ Board::Board() {
 				this->pos[i] = new int[BOARD_WIDTH]{wRook, wKnight, wBishop, wQueen, wKing, wBishop, wKnight, wRook};
 				break;
 			default:
-				this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY}; 	 	
+				this->pos[i] = new int[BOARD_WIDTH]{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY}; 				 	
 		}		
 	}
 
@@ -68,7 +68,6 @@ Board::~Board() {
 }
 
 // creates a new Board obj with the updated positions
-// also makes sure to NOT the turn
 // get_moves() only if needed
 Board* Board::make_move(pieceMove move, bool getMoves) {
 	Board* newBoard = new Board(this->pos, !this->turn, move, 
@@ -78,7 +77,13 @@ Board* Board::make_move(pieceMove move, bool getMoves) {
 	newBoard->pos[move.destRow][move.destCol] = newBoard->pos[move.srcRow][move.srcCol]; 
 	newBoard->pos[move.srcRow][move.srcCol] = EMPTY;
 
-	if (move.castlingMove) {
+	if (move.enPassant) {
+		if (move.destRow == 2) { // white performing en passant
+			newBoard->pos[move.destRow+1][move.destCol] = EMPTY;
+		} else if (move.destRow == 5) { // black performing en passant
+			newBoard->pos[move.destRow-1][move.destCol] = EMPTY;
+		}
+	} else if (move.castlingMove) {
 		if (move.destRow == 7) { // white castling
 			newBoard->wKingMoved = true;
 			if (move.destCol == 6) { // kingside castling
@@ -122,19 +127,39 @@ void Board::get_moves() {
 
 	if (this->turn == WHITE) {
 		myTeam = WhiteTeam;
+
+		// castling
 		if (!this->wKingMoved) {
 			if(!this->wRRookMoved && wKingsideCastle()) moves.push_back(pieceMove(7, 4, 7, 6, true));
 			if(!this->wLRookMoved && wQueensideCastle()) moves.push_back(pieceMove(7, 4, 7, 2, true));
 		}
+
+		// en passant
+		if (this->prev.srcRow == 1 && this->prev.destRow == 3 && this->pos[3][this->prev.destCol] == bPawn) {
+			if (this->prev.destCol-1 >= 0 && this->pos[3][this->prev.destCol-1] == wPawn) 
+				moves.push_back(pieceMove(3, this->prev.destCol-1, 2, this->prev.destCol, false, true));
+			if (this->prev.destCol+1 < BOARD_WIDTH && this->pos[3][this->prev.destCol+1] == wPawn) 
+				moves.push_back(pieceMove(3, this->prev.destCol+1, 2, this->prev.destCol, false, true));
+		}
 	} else {
 		myTeam = BlackTeam;
+
+		// castling
 		if (!this->bKingMoved) {
 			if(!this->bRRookMoved && bKingsideCastle()) moves.push_back(pieceMove(0, 4, 0, 6, true));
 			if(!this->bLRookMoved && bQueensideCastle()) moves.push_back(pieceMove(0, 4, 0, 2, true));
 		}
+
+		// en passant
+		if (this->prev.srcRow == 6 && this->prev.destRow == 4 && this->pos[4][this->prev.destCol] == wPawn) {
+			if (this->prev.destCol-1 >= 0 && this->pos[4][this->prev.destCol-1] == bPawn) 
+				moves.push_back(pieceMove(4, this->prev.destCol-1, 5, this->prev.destCol, false, true));
+			if (this->prev.destCol+1 < BOARD_WIDTH && this->pos[4][this->prev.destCol+1] == bPawn) 
+				moves.push_back(pieceMove(4, this->prev.destCol+1, 5, this->prev.destCol, false, true));
+		}
 	}
 
-	
+	// regular moves
 	std::vector<pieceMove> piece_moves;
 	for (int row = 0; row < BOARD_HEIGHT; row++) {
 		for (int column = 0; column < BOARD_WIDTH; column++) {
@@ -173,7 +198,6 @@ void Board::get_moves() {
 	}
 
 	Board* tempBoard;
-	int j = 0;
 	for (std::vector<pieceMove>::iterator it = this->moves.begin(); it != this->moves.end();) {
 		tempBoard = make_move(pieceMove(it->srcRow, it->srcCol, it->destRow, it->destCol), false);
 		if (tempBoard->checked(this->turn)) {
@@ -189,20 +213,15 @@ void Board::get_moves() {
 // see if the move the user tries to play
 // is in the moves vector
 bool Board::check_move(pieceMove tryMove) {
-	// std::cout << "trying this move: " << "srcRow: " << 7-tryMove.srcRow << "; srcCol: " << tryMove.srcCol << " destRow: " << 7-tryMove.destRow << "; destCol: " << tryMove.destCol << "; castlingMove: " << tryMove.castlingMove << std::endl;
-	// std::cout << "your available moves: " << std::endl;
-	// for (int i = 0; i < moves.size(); ++i) {
- //        std::cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << "; castlingMove: " << moves.at(i).castlingMove << std::endl;
- //    }
-
 	for (std::vector<pieceMove>::iterator it = this->moves.begin(); it != this->moves.end(); it++) {
 		if (it->srcRow == tryMove.srcRow &&
 			it->srcCol == tryMove.srcCol &&
 			it->destRow == tryMove.destRow &&
 			it->destCol == tryMove.destCol &&
-			it->castlingMove == tryMove.castlingMove){
+			it->castlingMove == tryMove.castlingMove &&
+			it->enPassant == tryMove.enPassant){
 					return true;
-				}
+		}
     }
     return false;
 }
@@ -224,7 +243,6 @@ bool Board::checked(bool colour) {
 
 	if (kingRow == -1 || kingColumn == -1) return true;
 
-	//cout << "King coordinates: " << kingRow << kingColumn << endl;
 	if (this->checked_knights(kingRow, kingColumn, colour) ||
 		this->checked_pawns(kingRow, kingColumn, colour) ||
 		this->checked_enemyKing(kingRow, kingColumn, colour) ||
@@ -548,7 +566,7 @@ bool Board::bQueensideCastle() {
 /*
 
 for (int i = 0; i < moves.size(); ++i) {
-        std::cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << std::endl;
-    }
+std::cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << "; castlingMove: " << moves.at(i).castlingMove << "; enPassant: " << moves.at(i).enPassant << std::endl;
+        }
 
 */

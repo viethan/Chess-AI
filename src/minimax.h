@@ -13,13 +13,12 @@
 
 Potential Improvements:
 - sort moves based on score for better pruning
+- openings
 - king endgame table
 - try to differentiate between moves of the same value (especially those with +/- inf)
 - there are cases when the king is literally captured. In that case, checked() will return True
 - option to resign to the AI
 - piece update thing
-- en passant
-- castling
 
 */ 
 

@@ -9,13 +9,14 @@ class pieceMove {
 	public:
 		int srcRow, srcCol;
 		int destRow, destCol;
-		bool castlingMove;
+		bool castlingMove, enPassant;
 
 		pieceMove();
 		pieceMove(const pieceMove &obj);
 		pieceMove(int srcRow, int srcCol, int destRow, int destCol);
 		pieceMove(int srcRow, int srcCol, int destRow, int destCol, bool castlingMove);
-		static bool string2move(std::string input, pieceMove* target, bool colour);		
+		pieceMove(int srcRow, int srcCol, int destRow, int destCol, bool castlingMove, bool enPassant);
+		static bool string2move(std::string input, pieceMove* target, bool colour, int** board);		
 };
 
 #endif
