@@ -222,16 +222,18 @@ void Board::get_moves() {
 // see if the move the user tries to play
 // is in the moves vector
 bool Board::check_move(pieceMove tryMove) {
-	std::cout << "your available moves: " << std::endl;
-	for (int i = 0; i < moves.size(); ++i) {
-        std::cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << "; castlingMove: " << moves.at(i).castlingMove << std::endl;
-    }
+	// std::cout << "trying this move: " << "srcRow: " << tryMove.srcRow << "; srcCol: " << tryMove.srcCol << " destRow: " << 7-tryMove.destRow << "; destCol: " << tryMove.destCol << "; castlingMove: " << tryMove.castlingMove << std::endl;
+	// std::cout << "your available moves: " << std::endl;
+	// for (int i = 0; i < moves.size(); ++i) {
+ //        std::cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << "; castlingMove: " << moves.at(i).castlingMove << std::endl;
+ //    }
 
 	for (std::vector<pieceMove>::iterator it = this->moves.begin(); it != this->moves.end(); it++) {
 		if (it->srcRow == tryMove.srcRow &&
 			it->srcCol == tryMove.srcCol &&
 			it->destRow == tryMove.destRow &&
-			it->destCol == tryMove.destCol){
+			it->destCol == tryMove.destCol &&
+			it->castlingMove == tryMove.castlingMove){
 					return true;
 				}
     }

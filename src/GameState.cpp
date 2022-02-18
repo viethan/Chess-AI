@@ -31,7 +31,7 @@ int GameState::selectPlayer() {
     while(true) {
         std::cout << "Enter 0 for White, 1 for Black, 2 for Random" << std::endl;
         std::cout << "Type quit in order to exit" << std::endl;
-        std::cin >> input;
+        std::getline(std::cin, input);
         
         if (input.compare("quit") == 0) { 
             this->status = QUIT;
@@ -69,14 +69,14 @@ void GameState::userMoves() {
     
     while (true) {
         std::cout << "Your next move: " << std::endl;
-        std::cin >> input;
-
+        std::getline(std::cin, input);
+        
         if (input.compare("quit") == 0) { 
             this->status = QUIT;
             return;
         }
 
-        if (pieceMove::string2move(input, &userMove) && 
+        if (pieceMove::string2move(input, &userMove, this->userColour) && 
             this->board->check_move(userMove)) {
                 if (this->userColour == WHITE) this->history.push_back("White " + input);    
                 else this->history.push_back("Black " + input);
