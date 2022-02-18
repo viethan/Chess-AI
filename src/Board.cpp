@@ -77,7 +77,14 @@ Board* Board::make_move(pieceMove move, bool getMoves) {
 	newBoard->pos[move.destRow][move.destCol] = newBoard->pos[move.srcRow][move.srcCol]; 
 	newBoard->pos[move.srcRow][move.srcCol] = EMPTY;
 
-	if (move.enPassant) {
+	// white pawn promotion to queen
+	if (move.destRow == 0 && newBoard->pos[move.destRow][move.destCol] == wPawn) {
+		newBoard->pos[move.destRow][move.destCol] = wQueen;
+	} 
+	// black pawn promotion to queen
+	else if (move.destRow == 7 && newBoard->pos[move.destRow][move.destCol] == bPawn) {
+		newBoard->pos[move.destRow][move.destCol] = bQueen;
+	} else if (move.enPassant) {
 		if (move.destRow == 2) { // white performing en passant
 			newBoard->pos[move.destRow+1][move.destCol] = EMPTY;
 		} else if (move.destRow == 5) { // black performing en passant
