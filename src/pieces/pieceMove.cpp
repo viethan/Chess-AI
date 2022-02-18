@@ -6,6 +6,7 @@ pieceMove::pieceMove() {
 	this->srcCol = -1;
 	this->destRow = -1;
 	this->destCol = -1;
+	this->castlingMove = false;
 }
 
 pieceMove::pieceMove(int srcRow, int srcCol, int destRow, int destCol) {
@@ -13,6 +14,15 @@ pieceMove::pieceMove(int srcRow, int srcCol, int destRow, int destCol) {
 	this->srcCol = srcCol;
 	this->destRow = destRow;
 	this->destCol = destCol;
+	this->castlingMove = false;
+}
+
+pieceMove::pieceMove(int srcRow, int srcCol, int destRow, int destCol, bool castlingMove) {
+	this->srcRow = srcRow;
+	this->srcCol = srcCol;
+	this->destRow = destRow;
+	this->destCol = destCol;
+	this->castlingMove = true;
 }
 
 bool pieceMove::string2move(std::string input, pieceMove* target) {

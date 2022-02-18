@@ -37,6 +37,10 @@ class Board {
 		bool checked_enemyKing(int kingRow, int kingColumn, bool colour);
 		bool checked_diagonals(int kingRow, int kingColumn, bool colour);
 		bool checked_rankFile(int kingRow, int kingColumn, bool colour);
+		bool wKingsideCastle();
+		bool wQueensideCastle();
+		bool bKingsideCastle();
+		bool bQueensideCastle();
 };
 
 #endif

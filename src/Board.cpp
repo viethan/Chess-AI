@@ -32,11 +32,7 @@ Board::Board() {
 	this->bKingMoved = false;
 	this->bLRookMoved = false;
 	this->bRRookMoved = false;
-	std::cout << "new board " << this->wKingMoved << this->wLRookMoved << this->wRRookMoved << std::endl;
-	std::cout << this->bKingMoved << this->bLRookMoved << this->bRRookMoved << std::endl;
 	this->get_moves();
-	std::cout << "after get_moves() " << this->wKingMoved << this->wLRookMoved << this->wRRookMoved << std::endl;
-	std::cout << this->bKingMoved << this->bLRookMoved << this->bRRookMoved << std::endl;
 }
 
 Board::Board(int** paramPos, bool turn,
@@ -77,33 +73,101 @@ Board* Board::make_move(pieceMove move, bool getMoves) {
 	Board* newBoard = new Board(this->pos, !this->turn, 
 		this->wKingMoved, this->wLRookMoved, this->wRRookMoved,
 		this->bKingMoved, this->bLRookMoved, this->bRRookMoved);
+
 	newBoard->pos[move.destRow][move.destCol] = newBoard->pos[move.srcRow][move.srcCol]; 
 	newBoard->pos[move.srcRow][move.srcCol] = EMPTY;
 
-	// for castling
+	if (move.castlingMove) {
+		if (move.destRow == 7) { // white castling
+			newBoard->wKingMoved = true;
+			if (move.destCol == 6) { // kingside castling
+				newBoard->pos[7][5] = wRook; 
+				newBoard->pos[7][7] = EMPTY;
+				newBoard->wRRookMoved = true;				
+			} else if (move.destCol == 2) { // queenside castling
+				newBoard->pos[7][3] = wRook;
+				newBoard->pos[7][0] = EMPTY;
+				newBoard->wLRookMoved = true;
+			}
+		} else if (move.destRow == 0) { // black castling
+			newBoard->bKingMoved = true;
+			if (move.destCol == 6) { // kingside castling
+				newBoard->pos[0][5] = bRook; 
+				newBoard->pos[0][7] = EMPTY;
+				newBoard->bRRookMoved = true;				
+			} else if (move.destCol == 2) { // queenside castling
+				newBoard->pos[0][3] = bRook;
+				newBoard->pos[0][0] = EMPTY;
+				newBoard->bLRookMoved = true;
+			}
+		}
+	} else {
+	// to determine if we can castle in the future
 	if(move.srcRow == 7 && move.srcCol == 4) newBoard->wKingMoved = true;
 	if(move.srcRow == 7 && move.srcCol == 0) newBoard->wLRookMoved = true;
 	if(move.srcRow == 7 && move.srcCol == 7) newBoard->wRRookMoved = true;
 	if(move.srcRow == 0 && move.srcCol == 4) newBoard->bKingMoved = true;
 	if(move.srcRow == 0 && move.srcCol == 0) newBoard->bLRookMoved = true;
 	if(move.srcRow == 0 && move.srcCol == 7) newBoard->bRRookMoved = true;
+	}
 
 	if (getMoves) newBoard->get_moves();
-
 	return newBoard;
 }
 
+bool Board::wKingsideCastle() {
+	if (this->checked(WHITE) ||
+		!(this->pos[7][5] == EMPTY) ||
+		!(this->pos[7][6] == EMPTY))
+		return false;
+	return true;
+}
+
+bool Board::wQueensideCastle() {
+	if (this->checked(WHITE) ||
+		!(this->pos[7][1] == EMPTY) ||
+		!(this->pos[7][2] == EMPTY) ||
+		!(this->pos[7][3] == EMPTY))
+		return false;
+	return true;
+}
+
+bool Board::bKingsideCastle() {
+	if (this->checked(BLACK) ||
+		!(this->pos[0][5] == EMPTY) ||
+		!(this->pos[0][6] == EMPTY))
+		return false;
+	return true;
+}
+
+bool Board::bQueensideCastle() {
+	if (this->checked(BLACK) ||
+		!(this->pos[0][1] == EMPTY) ||
+		!(this->pos[0][2] == EMPTY) ||
+		!(this->pos[0][3] == EMPTY))
+		return false;
+	return true;
+}
+
 void Board::get_moves() {
-	std::unordered_set<int> myTeam, enemyTeam;
+	this->moves = std::vector<pieceMove>();
+	std::unordered_set<int> myTeam;
+
 	if (this->turn == WHITE) {
 		myTeam = WhiteTeam;
-		enemyTeam = BlackTeam;
+		if (!this->wKingMoved) {
+			if(!this->wRRookMoved && wKingsideCastle()) moves.push_back(pieceMove(7, 4, 7, 6, true));
+			if(!this->wLRookMoved && wQueensideCastle()) moves.push_back(pieceMove(7, 4, 7, 2, true));
+		}
 	} else {
 		myTeam = BlackTeam;
-		enemyTeam = WhiteTeam;
+		if (!this->bKingMoved) {
+			if(!this->bRRookMoved && bKingsideCastle()) moves.push_back(pieceMove(0, 4, 0, 6, true));
+			if(!this->bLRookMoved && bQueensideCastle()) moves.push_back(pieceMove(0, 4, 0, 2, true));
+		}
 	}
 
-	this->moves = std::vector<pieceMove>();
+	
 	std::vector<pieceMove> piece_moves;
 	for (int row = 0; row < BOARD_HEIGHT; row++) {
 		for (int column = 0; column < BOARD_WIDTH; column++) {
@@ -158,8 +222,11 @@ void Board::get_moves() {
 // see if the move the user tries to play
 // is in the moves vector
 bool Board::check_move(pieceMove tryMove) {
-	std::cout << this->wKingMoved << this->wLRookMoved << this->wRRookMoved << std::endl;
-	std::cout << this->bKingMoved << this->bLRookMoved << this->bRRookMoved << std::endl << std::endl;
+	std::cout << "your available moves: " << std::endl;
+	for (int i = 0; i < moves.size(); ++i) {
+        std::cout << "srcRow: " << 7-moves.at(i).srcRow << "; srcCol: " << moves.at(i).srcCol << " destRow: " << 7-moves.at(i).destRow << "; destCol: " << moves.at(i).destCol << "; castlingMove: " << moves.at(i).castlingMove << std::endl;
+    }
+
 	for (std::vector<pieceMove>::iterator it = this->moves.begin(); it != this->moves.end(); it++) {
 		if (it->srcRow == tryMove.srcRow &&
 			it->srcCol == tryMove.srcCol &&
