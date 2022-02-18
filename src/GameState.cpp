@@ -100,10 +100,22 @@ void GameState::AIMoves() {
     std::string srcCol(1, 'a' + AIMove.srcCol), destCol(1, 'a' + AIMove.destCol);
     std::string srcRow(1, '1' + (7-AIMove.srcRow)), destRow(1, '1' + (7-AIMove.destRow));
     
-    if (!(this->userColour) == WHITE)
-        this->history.push_back("White " + srcCol + srcRow + destCol + destRow);    
-    else
-        this->history.push_back("Black " + srcCol + srcRow + destCol + destRow);
+    if (!(this->userColour) == WHITE) {
+        if (!AIMove.castlingMove)
+            this->history.push_back("White " + srcCol + srcRow + destCol + destRow);
+        else {
+            if (AIMove.destCol == 6) this->history.push_back("White kingside castle");
+            else if (AIMove.destCol == 2) this->history.push_back("White queenside castle");
+        }    
+    }
+    else {
+        if (!AIMove.castlingMove)
+            this->history.push_back("Black " + srcCol + srcRow + destCol + destRow);
+        else {
+            if (AIMove.destCol == 6) this->history.push_back("Black kingside castle");
+            else if (AIMove.destCol == 2) this->history.push_back("Black queenside castle");
+        }
+    }
 
     Board* newBoard;
     newBoard = this->board->make_move(AIMove, true);
