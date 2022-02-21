@@ -37,7 +37,7 @@
 
 ![alt text](https://github.com/viethan/Chess-AI/blob/main/img/readmeImg/stockfishL3.png?raw=true)
 
-* It beat Stockfish L3, which has a rating of 1400! Link to the match in the image is ([here](https://lichess.org/MxnxuK6O))
+* It beat Stockfish L3, which has a rating of 1400! Link to the match is ([here](https://lichess.org/MxnxuK6O))
 
 ## Future Improvements
 
