@@ -29,7 +29,7 @@
 * Minimax implementation with Alpha-Beta pruning
 * Uses a simplied evaluation function, which provides a score based on positions and chess pieces present ([link](https://www.chessprogramming.org/Simplified_Evaluation_Function))
 * The game tree finishes recursing when depth reaches zero, or it detects that no moves are available - stalemate or loss
-* The depth can easily be changed in the header file, allowing for better moves in exchange for mote time spent on the computation
+* The depth can easily be changed in the header file, allowing for better moves in exchange for more time spent on the computation
 
 ![alt text](https://github.com/viethan/Chess-AI/blob/main/img/readmeImg/minimax.png?raw=true)
 
